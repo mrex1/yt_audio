@@ -1,0 +1,1 @@
+export const URL = 'https://main-youtube-shd6uy5b29ceuriw-gtw.qovery.io'

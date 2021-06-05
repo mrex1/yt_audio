@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const VideoListItem = ({ video, setVideo }) => {
     const { title, url } = video
     const classes = useStyles()
-    const thumbnail = video.snippet.thumbnails.url
+    const thumbnail = video.thumbnail.url
     const onVidClick = useCallback(() => {
         setVideo(video)
     }, [video, setVideo])

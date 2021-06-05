@@ -3,6 +3,7 @@ import {useState, useCallback} from 'react'
 import VideoList from './components/VideoList'
 import SearchBar from './components/SearchBar'
 import Player from './components/Player'
+import {URL} from './constants'
 
 function App() {
   const [videos, setVideos] = useState([])
@@ -20,7 +21,7 @@ function App() {
       try {
         const formatSearchTearm = searchTerm.split(' ').join('+')
         setLoading(true)
-        const result = await fetch('http://192.168.0.158:3000/search/' + formatSearchTearm).then(res => res.json())
+        const result = await fetch(`${URL}/search/` + formatSearchTearm).then(res => res.json())
         setVideos(result)
         setLoading(false)
       } catch (err) {
@@ -31,7 +32,7 @@ function App() {
   }, [searchTerm])
 
   const setVideo = useCallback(video => {
-    const url = 'http://192.168.0.158:3000/'+video.url.substr(12)
+    const url = `${URL}/`+video.url.substr(12)
     console.log(url)
     setVideoUrl(url)
   }, [])
