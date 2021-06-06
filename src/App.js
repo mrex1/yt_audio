@@ -3,7 +3,8 @@ import {useState, useCallback} from 'react'
 import VideoList from './components/VideoList'
 import SearchBar from './components/SearchBar'
 import Player from './components/Player'
-import {URL} from './constants'
+import {URL, theme} from './constants'
+import {LinearProgress, ThemeProvider} from '@material-ui/core'
 
 function App() {
   const [videos, setVideos] = useState([])
@@ -33,15 +34,16 @@ function App() {
 
   const setVideo = useCallback(video => {
     const url = `${URL}/`+video.url.substr(12)
-    console.log(url)
     setVideoUrl(url)
   }, [])
   return (
-    <div>
+    <ThemeProvider theme={theme}>
+    <div style={{height: '100vh', overflow: 'hidden'}}>
     <SearchBar onChange={onSearchTermChange} onSubmit={onSearch}/>
-    {loading ? <p>loading...</p> : <VideoList videos={videos} setVideo={setVideo}/>}
+    {loading ? <LinearProgress /> : <VideoList videos={videos} setVideo={setVideo}/>}
     <Player src={videoUrl}/>
     </div>
+    </ThemeProvider>
   );
 }
 
