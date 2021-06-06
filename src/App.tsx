@@ -5,9 +5,10 @@ import SearchBar from './components/SearchBar'
 import Player from './components/Player'
 import {URL, theme} from './constants'
 import {LinearProgress, ThemeProvider} from '@material-ui/core'
+import { Video } from './types';
 
 function App() {
-  const [videos, setVideos] = useState([])
+  const [videos, setVideos] = useState<Array<Video>>([])
   const [videoUrl, setVideoUrl] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
