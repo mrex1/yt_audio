@@ -8,9 +8,9 @@ import {LinearProgress, ThemeProvider} from '@material-ui/core'
 
 function App() {
   const [videos, setVideos] = useState([])
-  const [videoUrl, setVideoUrl] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [videoUrl, setVideoUrl] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   const onSearchTermChange = useCallback((evt) => {
     const txt = evt.target.value

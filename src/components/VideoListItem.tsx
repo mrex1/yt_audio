@@ -18,7 +18,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const VideoListItem = ({ video, setVideo }) => {
+interface Props {
+    video: any;
+    setVideo: (video: any) => void;
+}
+
+const VideoListItem = ({ video, setVideo }: Props) => {
     const { title, url } = video
     const classes = useStyles()
     const thumbnail = video.thumbnail.url
