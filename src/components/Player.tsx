@@ -2,7 +2,11 @@ import React from 'react'
 import AudioPlayer from 'react-h5-audio-player'
 import 'react-h5-audio-player/lib/styles.css'
 
-const Player = ({src}) => {
+interface Props{
+    src: string;
+}
+
+const Player = ({src}: Props) => {
     return (
         <AudioPlayer
         src={src}

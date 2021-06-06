@@ -1,8 +1,12 @@
 import React, { useCallback } from 'react'
 import { TextField, AppBar, Toolbar } from '@material-ui/core'
 
+interface Props{
+    onChange: (evt: any) => void;
+    onSubmit: () => void;
+}
 
-const SearchBar = ({ onChange, onSubmit }) => {
+const SearchBar = ({ onChange, onSubmit }: Props) => {
     const onKeyPress = useCallback(evt => {
         if (evt.charCode === 13) {
             onSubmit()

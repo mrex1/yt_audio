@@ -1,7 +1,13 @@
 import React from 'react'
 import VideoListItem from './VideoListItem'
+import {Video} from '../types'
 
-const VideoList = ({videos, setVideo}) => {
+interface Props{
+    videos: Array<Video>;
+    setVideo: (video: Video) => void;
+}
+
+const VideoList = ({videos, setVideo}: Props) => {
     return (<div style={{height: '100%', overflow: 'auto'}}>
         {videos && videos.map(v => <VideoListItem video={v} key={v.url} setVideo={setVideo}/>)}
         <div style={{height: 200}}/>
