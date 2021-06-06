@@ -1,9 +1,10 @@
 import React from 'react'
 import VideoListItem from './VideoListItem'
+import {Video} from '../types'
 
 interface Props{
-    videos: Array<any>;
-    setVideo: (video: any) => void;
+    videos: Array<Video>;
+    setVideo: (video: Video) => void;
 }
 
 const VideoList = ({videos, setVideo}: Props) => {

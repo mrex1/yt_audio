@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Card, CardContent, Typography, CardMedia } from '@material-ui/core'
+import {Video} from '../types'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface Props {
-    video: any;
-    setVideo: (video: any) => void;
+    video: Video;
+    setVideo: (video: Video) => void;
 }
 
 const VideoListItem = ({ video, setVideo }: Props) => {
