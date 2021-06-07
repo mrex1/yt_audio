@@ -1,6 +1,6 @@
 import {createMuiTheme} from '@material-ui/core'
 
-export const URL = 'http://192.168.0.116:3001'
+export const URL = 'https://main-youtube-shd6uy5b29ceuriw-gtw.qovery.io'
 
 export const theme = createMuiTheme({
     palette: {

@@ -39,7 +39,7 @@ const VideoListItem = ({ video, setVideo }: Props) => {
                 title={title}
             />
             <CardContent className={classes.content}>
-                <Typography component="h5" variant="h5">
+                <Typography component="h6" variant="h6">
                     {title}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
