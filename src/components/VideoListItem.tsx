@@ -25,7 +25,7 @@ interface Props {
 }
 
 const VideoListItem = ({ video, setVideo }: Props) => {
-    const { title, url } = video
+    const { title, id } = video
     const classes = useStyles()
     const thumbnail = video.thumbnail.url
     const onVidClick = useCallback(() => {
@@ -43,7 +43,7 @@ const VideoListItem = ({ video, setVideo }: Props) => {
                     {title}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                    {url}
+                    {id}
                 </Typography>
             </CardContent>
         </Card>

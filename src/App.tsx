@@ -3,13 +3,14 @@ import {useState, useCallback} from 'react'
 import VideoList from './components/VideoList'
 import SearchBar from './components/SearchBar'
 import Player from './components/Player'
-import {URL, theme} from './constants'
+import {theme} from './constants'
+import {api} from './services'
 import {LinearProgress, ThemeProvider} from '@material-ui/core'
 import { Video } from './types';
 
 function App() {
   const [videos, setVideos] = useState<Array<Video>>([])
-  const [videoUrl, setVideoUrl] = useState<string>('')
+  const [videoId, setVideoId] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -21,9 +22,8 @@ function App() {
   const onSearch = useCallback(() => {
     const fetchData = async () => {
       try {
-        const formatSearchTearm = searchTerm.split(' ').join('+')
         setLoading(true)
-        const result = await fetch(`${URL}/search/` + formatSearchTearm).then(res => res.json())
+        const result = await api.search(searchTerm)
         setVideos(result)
         setLoading(false)
       } catch (err) {
@@ -33,16 +33,15 @@ function App() {
     fetchData()
   }, [searchTerm])
 
-  const setVideo = useCallback(video => {
-    const url = `${URL}/`+video.url.substr(12)
-    setVideoUrl(url)
+  const setVideo = useCallback((video: Video) => {
+    setVideoId(video.id)
   }, [])
   return (
     <ThemeProvider theme={theme}>
     <div style={{height: '100vh', overflow: 'hidden'}}>
     <SearchBar onChange={onSearchTermChange} onSubmit={onSearch}/>
     {loading ? <LinearProgress /> : <VideoList videos={videos} setVideo={setVideo}/>}
-    <Player src={videoUrl}/>
+    <Player videoId={videoId}/>
     </div>
     </ThemeProvider>
   );
