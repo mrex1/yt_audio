@@ -38,7 +38,7 @@ function App() {
   }, [])
   return (
     <ThemeProvider theme={theme}>
-    <div style={{height: '100vh', overflow: 'hidden'}}>
+    <div className='background' style={{height: '100vh', overflow: 'hidden'}}>
     <SearchBar onChange={onSearchTermChange} onSubmit={onSearch}/>
     {loading ? <LinearProgress /> : <VideoList videos={videos} setVideo={setVideo}/>}
     <Player videoId={videoId}/>

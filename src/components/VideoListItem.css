@@ -1,0 +1,29 @@
+.video-list-item-container {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 5px 10px 5px;
+}
+
+.video-list-item-container img {
+    width: 150px;
+    margin-right: 10px;
+}
+
+.video-list-item-container .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.video-list-item-container .title {
+    font-size: 16px;
+    color: white;
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+
+.video-list-item-container .subtitle {
+    font-size: 13px;
+    color: silver;
+}

@@ -70,17 +70,17 @@ const Player = ({videoId}: Props) => {
     return (
         <div style={{position: 'fixed', bottom: 0, width: '100%'}}>
         {loading ? <LinearProgress/> : (videoDetails &&
-            <div style={{width: '100%', background: '#fff', color: '#000', display: 'flex', flexDirection: 'column', boxShadow: '0px 0px 4px rgba(0,0,0,0.5)'}}>
+            <div style={{width: '100%', background: '#000', color: '#fff', display: 'flex', flexDirection: 'column', boxShadow: '0px 0px 4px rgba(0,0,0,0.5)'}}>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <span style={{margin: 5, marginRight: 15}}>{formatTime(currentTime)}</span>
-                    <Slider onChange={onSliderChange} max={videoDetails.lengthSeconds} min={0} value={currentTime}/>
+                    <Slider color='secondary' onChange={onSliderChange} max={videoDetails.lengthSeconds} min={0} value={currentTime}/>
                     <span style={{margin: 5, marginLeft: 15}}>{formatTime(videoDetails.lengthSeconds)}</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                    <IconButton onClick={playOrPause}>
+                    <IconButton onClick={playOrPause} color='secondary'>
                         {playing ? <PauseIcon/> : <PlayArrowIcon/>}
                     </IconButton>
-                    <IconButton onClick={download}>
+                    <IconButton onClick={download} color='secondary'>
                         <DownloadIcon/>
                     </IconButton>
                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: 5, overflow: "hidden", textOverflow: "ellipsis"}}>
