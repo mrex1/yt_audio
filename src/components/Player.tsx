@@ -85,7 +85,7 @@ const Player = ({videoId}: Props) => {
                     </IconButton>
                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: 5, overflow: "hidden", textOverflow: "ellipsis"}}>
                     <Typography variant="subtitle1" noWrap>{videoDetails.title}</Typography>
-                        <Typography variant="subtitle2" color="textSecondary" noWrap>{videoDetails.author}</Typography>
+                        <Typography variant="subtitle2" style={{color: 'silver'}} noWrap>{videoDetails.author}</Typography>
                     </div>
                 </div>
             </div>
