@@ -15,7 +15,7 @@ class API {
         }
         const res = await fetch(`${this.url}/info/${videoId}`)
         const data = await res.json()
-        data.lengthSeconds = parseInt(data.lengthSeconds)
+        data.videoDetails.lengthSeconds = parseInt(data.videoDetails.lengthSeconds)
         this.cache[videoId] = data
         return data
     }
