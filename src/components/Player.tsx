@@ -34,9 +34,14 @@ const Player = ({videoId}: Props) => {
             audio.addEventListener('ended', () => {
                 setPlaying(false)
             })
+            audio.addEventListener('pause', () => {
+                setPlaying(false)
+            })
+            audio.addEventListener('play', () => {
+                setPlaying(true)
+            })
             audioRef.current = audio
             const info = await api.getInfo(videoId)
-            setPlaying(false)
             setVideoDetails(info.videoDetails)
             setLoading(false)
         }
@@ -57,7 +62,6 @@ const Player = ({videoId}: Props) => {
             } else {
                 audioRef.current.play()
             }
-            setPlaying(!playing)
         }
     }, [playing])
     
