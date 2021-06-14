@@ -41,8 +41,8 @@ function App() {
 		playlist.add(videoId).then(() => setPlaylistVideos(playlist.playlistVideos))
 		if (end && autoplay) {
 			setEnd(false)
-			const next = playlist.vidToId(videoId)
-			if (next !== -1) {
+			const next = playlist.setCurByVid(videoId)
+			if (next !== undefined) {
 				setCurrent(next)
 			}
 		}
@@ -52,7 +52,7 @@ function App() {
 		//for autoplaying next video
 		if (end && autoplay && playlist.playlistVideos.length > 0) {
 			const next = playlist.next()
-			if (next) {
+			if (next !== undefined) {
 				return setCurrent(next)
 			}
 			const suggest = playlist.suggest()

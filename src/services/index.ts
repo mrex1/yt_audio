@@ -72,8 +72,12 @@ export class Playlist {
     get playlistVideos(): Array<VideoInfo> {
         return this.videoIds.map(id => this.videoInfos[id])
     }
-    vidToId(vid: string): number {
-        return this.videoIds.indexOf(vid)
+    setCurByVid(vid: string): number | void {
+        const newCur = this.videoIds.indexOf(vid)
+        if (newCur !== -1) {
+            this.current = newCur
+            return this.current
+        }
     }
     next(): number | void {
         if (this.current < this.videoIds.length - 1) {
