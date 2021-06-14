@@ -12,9 +12,10 @@ import { useEffect } from 'react';
 function App() {
 	const [videos, setVideos] = useState<Array<Video>>([])
 	const [end, setEnd] = useState<boolean>(true)
+	const [autoplay, setAutoplay] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(false)
 	const [playlistVideos, setPlaylistVideos] = useState<Array<VideoInfo>>([])
-	const [current, setCurrent] = useState<number | null>(null)
+	const [current, setCurrent] = useState<number>(-1)
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
 	const onSearchTermChange = useCallback((evt) => {
@@ -39,21 +40,27 @@ function App() {
 	const setVideo = useCallback((videoId: string) => {
 		playlist.add(videoId).then(() => setPlaylistVideos(playlist.playlistVideos))
 		if (end) {
-			const next = playlist.next()
-			if (next !== undefined) {
+			setEnd(false)
+			const next = playlist.vidToId(videoId)
+			if (next !== -1) {
 				setCurrent(next)
 			}
 		}
 	}, [end])
 
 	useEffect(() => {
-		if (end) {
+		//for autoplaying next video
+		if (end && autoplay && playlist.playlistVideos.length > 0) {
 			const next = playlist.next()
 			if (next) {
-				setCurrent(next)
+				return setCurrent(next)
+			}
+			const suggest = playlist.suggest()
+			if (suggest) {
+				setVideo(suggest)
 			}
 		}
-	}, [end])
+	}, [end, autoplay, setVideo])
 
 	const onVideoEnd = useCallback(() => {
 		setEnd(true)
@@ -62,12 +69,20 @@ function App() {
 	const onVideoStart = useCallback(() => {
 		setEnd(false)
 	}, [])
+
+	const updateCurrent = useCallback((id: number) => {
+		playlist.current = id
+		setCurrent(id)
+	}, [])
 	return (
 		<ThemeProvider theme={theme}>
 			<div className='background' style={{ height: '100vh', overflow: 'hidden' }}>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
 				{loading ? <LinearProgress /> : <VideoList spaceBottom videos={videos} setVideo={setVideo} />}
-				<PlaylistRenderer playlistVideos={playlistVideos} currentIndex={current} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>
+				<PlaylistRenderer
+				autoplay={autoplay}
+				setAutoplay={setAutoplay}
+				playVideo={updateCurrent} onAdd={setVideo} playlistVideos={playlistVideos} currentIndex={current} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>
 			</div>
 		</ThemeProvider>
 	);

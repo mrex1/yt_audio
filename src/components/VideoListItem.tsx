@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import {Video} from '../types'
 import {IconButton} from '@material-ui/core'
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import './VideoListItem.css'
 
 interface Props {
@@ -31,7 +31,7 @@ const VideoListItem = ({ video, setVideo }: Props) => {
             </div>
             </div>
             <IconButton onClick={onVidClick} color='secondary'>
-                <PlayCircleOutlineIcon/>
+                <AddCircleOutlineIcon/>
             </IconButton>
         </div>
     )

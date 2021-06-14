@@ -16,12 +16,13 @@ interface Props{
     videoDetails: VideoDetails;
     onVideoEnd?: () => void;
     onVideoStart?: () => void;
+    autoplay: boolean;
+    setAutoplay: (on: boolean) => void;
 }
 
-const Player = ({videoDetails, onVideoEnd, onVideoStart}: Props) => {
+const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}: Props) => {
     const [playing, setPlaying] = useState<boolean>(false)
     const [curVId, setCurVId] = useState<string | null>(null)
-    const [autoplay, setAutoplay] = useState<boolean>(true)
     const [currentTime, setCurrentTime] = useState<number>(0)
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const fetchAudio = useCallback(() => {
@@ -85,7 +86,7 @@ const Player = ({videoDetails, onVideoEnd, onVideoStart}: Props) => {
 
     const handleAutoplayBtn = useCallback(() => {
         setAutoplay(!autoplay)
-    }, [autoplay])
+    }, [autoplay, setAutoplay])
     return (
         <div style={{width: '100%', background: '#000', color: '#fff', display: 'flex', flexDirection: 'column', boxShadow: '0px 0px 4px rgba(0,0,0,0.5)'}}>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>

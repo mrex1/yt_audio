@@ -62,6 +62,9 @@ export class Playlist {
         this.next = this.next.bind(this)
     }
     async add(videoId: string) {
+        if (videoId in this.videoInfos) {
+            return
+        }
         this.videoIds.push(videoId)
         const info = await this.api.getInfo(videoId)
         this.videoInfos[videoId] = info
@@ -69,10 +72,23 @@ export class Playlist {
     get playlistVideos(): Array<VideoInfo> {
         return this.videoIds.map(id => this.videoInfos[id])
     }
+    vidToId(vid: string): number {
+        return this.videoIds.indexOf(vid)
+    }
     next(): number | void {
         if (this.current < this.videoIds.length - 1) {
             this.current += 1
             return this.current
+        }
+    }
+    suggest(): string | void {
+        if (this.current === -1 || this.current >= this.videoIds.length) {
+            return
+        }
+        for (let v of this.playlistVideos[this.current].related_videos) {
+            if (this.videoIds.indexOf(v.videoId) === -1) {
+                return v.videoId
+            }
         }
     }
 }
