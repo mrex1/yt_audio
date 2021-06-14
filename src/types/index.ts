@@ -1,20 +1,16 @@
 export interface Video {
     title: string;
-    id: string;
-    thumbnail: {
-        url: string;
-    }
+    videoId: string;
+    thumbnailUrl: string;
 }
 
-export interface VideoDetails {
-    title: string;
+export interface VideoDetails extends Video {
     author: string;
-    videoId: string;
     lengthSeconds: number;
 }
 
 export interface VideoInfo {
-    related_videos: Array<any>;
+    related_videos: Array<VideoDetails>;
     videoDetails: VideoDetails;
 }
 
