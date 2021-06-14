@@ -39,14 +39,14 @@ function App() {
 
 	const setVideo = useCallback((videoId: string) => {
 		playlist.add(videoId).then(() => setPlaylistVideos(playlist.playlistVideos))
-		if (end) {
+		if (end && autoplay) {
 			setEnd(false)
 			const next = playlist.vidToId(videoId)
 			if (next !== -1) {
 				setCurrent(next)
 			}
 		}
-	}, [end])
+	}, [end, autoplay])
 
 	useEffect(() => {
 		//for autoplaying next video
