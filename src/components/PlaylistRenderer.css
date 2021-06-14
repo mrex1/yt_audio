@@ -1,0 +1,46 @@
+.playlist {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(27, 27, 27);
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.playlist.open {
+    height: 100vh;
+}
+
+.top-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: black;
+}
+
+.player-container {
+    flex: 1;
+    overflow: hidden;
+}
+
+.hide {
+    display: none;
+}
+
+.lists-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex: 1;
+}
+
+.divider {
+    margin-top: 15px !important;
+    margin-left: 5px !important;
+}
+
+.playlist .list {
+    overflow: unset !important;
+    height: unset !important;
+}

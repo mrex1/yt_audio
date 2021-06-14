@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react'
 import {Video} from '../types'
 import {IconButton} from '@material-ui/core'
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import './VideoListItem.css'
 
 interface Props {
     video: Video;
-    setVideo: (video: Video) => void;
+    setVideo: (videoId: string) => void;
 }
 
 const VideoListItem = ({ video, setVideo }: Props) => {
-    const { title, id } = video
-    const thumbnail = video.thumbnail.url
+    const { title, videoId } = video
+    const thumbnail = video.thumbnailUrl
     const onVidClick = useCallback(() => {
-        setVideo(video)
+        setVideo(video.videoId)
     }, [video, setVideo])
     return (
         <div className='video-list-item-container'>
@@ -27,11 +27,11 @@ const VideoListItem = ({ video, setVideo }: Props) => {
                 {title}
             </div>
             <div className="subtitle">
-                {id}
+                {videoId}
             </div>
             </div>
             <IconButton onClick={onVidClick} color='secondary'>
-                <PlayCircleOutlineIcon/>
+                <AddCircleOutlineIcon/>
             </IconButton>
         </div>
     )
