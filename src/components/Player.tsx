@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import 'react-h5-audio-player/lib/styles.css'
 import {URL} from '../constants'
-import {Slider, IconButton, Typography} from '@material-ui/core'
+import {Slider, IconButton, Typography, Tooltip} from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled'
 import {formatTime} from '../utils'
@@ -94,9 +94,11 @@ const Player = ({videoDetails, onVideoEnd}: Props) => {
                 <IconButton onClick={download} color='secondary'>
                     <DownloadIcon/>
                 </IconButton>
-                <IconButton onClick={handleAutoplayBtn} color='secondary'>
-                    {autoplay ? <PauseCircleFilledIcon/> : <PlayCircleFilledIcon/>}
-                </IconButton>
+                <Tooltip title="autoplay">
+                    <IconButton onClick={handleAutoplayBtn} color='secondary'>
+                        {autoplay ? <PauseCircleFilledIcon/> : <PlayCircleFilledIcon/>}
+                    </IconButton>
+                </Tooltip>
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: 5, overflow: "hidden", textOverflow: "ellipsis"}}>
                 <Typography variant="subtitle1" noWrap>{videoDetails.title}</Typography>
                     <Typography variant="subtitle2" style={{color: 'silver'}} noWrap>{videoDetails.author}</Typography>
