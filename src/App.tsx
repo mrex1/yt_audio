@@ -7,9 +7,11 @@ import { theme } from './constants'
 import { api, playlist } from './services'
 import { LinearProgress, ThemeProvider } from '@material-ui/core'
 import { Video, VideoInfo } from './types';
+import { useEffect } from 'react';
 
 function App() {
 	const [videos, setVideos] = useState<Array<Video>>([])
+	const [end, setEnd] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(false)
 	const [playlistVideos, setPlaylistVideos] = useState<Array<VideoInfo>>([])
 	const [current, setCurrent] = useState<number | null>(null)
@@ -36,26 +38,36 @@ function App() {
 
 	const setVideo = useCallback((videoId: string) => {
 		playlist.add(videoId).then(() => setPlaylistVideos(playlist.playlistVideos))
-		if (playlistVideos.length === 0) {
+		if (end) {
 			const next = playlist.next()
 			if (next !== undefined) {
 				setCurrent(next)
 			}
 		}
-	}, [playlistVideos])
+	}, [end])
 
-	const playNext = useCallback(() => {
-		const next = playlist.next()
-		if (next) {
-			setCurrent(next)
+	useEffect(() => {
+		if (end) {
+			const next = playlist.next()
+			if (next) {
+				setCurrent(next)
+			}
 		}
+	}, [end])
+
+	const onVideoEnd = useCallback(() => {
+		setEnd(true)
+	}, [])
+
+	const onVideoStart = useCallback(() => {
+		setEnd(false)
 	}, [])
 	return (
 		<ThemeProvider theme={theme}>
 			<div className='background' style={{ height: '100vh', overflow: 'hidden' }}>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
 				{loading ? <LinearProgress /> : <VideoList spaceBottom videos={videos} setVideo={setVideo} />}
-				<PlaylistRenderer playlistVideos={playlistVideos} currentIndex={current} onVideoEnd={playNext} />
+				<PlaylistRenderer playlistVideos={playlistVideos} currentIndex={current} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>
 			</div>
 		</ThemeProvider>
 	);

@@ -14,16 +14,17 @@ import DownloadIcon from '@material-ui/icons/GetApp';
 
 interface Props{
     videoDetails: VideoDetails;
-    onVideoEnd: () => void;
+    onVideoEnd?: () => void;
+    onVideoStart?: () => void;
 }
 
-const Player = ({videoDetails, onVideoEnd}: Props) => {
+const Player = ({videoDetails, onVideoEnd, onVideoStart}: Props) => {
     const [playing, setPlaying] = useState<boolean>(false)
     const [curVId, setCurVId] = useState<string | null>(null)
     const [autoplay, setAutoplay] = useState<boolean>(true)
     const [currentTime, setCurrentTime] = useState<number>(0)
     const audioRef = useRef<HTMLAudioElement | null>(null)
-    const fetchAudio = useCallback(async () => {
+    const fetchAudio = useCallback(() => {
             if (curVId === videoDetails.videoId) {
                 return
             }
@@ -38,19 +39,24 @@ const Player = ({videoDetails, onVideoEnd}: Props) => {
             })
             audio.addEventListener('ended', () => {
                 setPlaying(false)
-                onVideoEnd()
+                if (onVideoEnd) {
+                    onVideoEnd()
+                }
             })
             audio.addEventListener('pause', () => {
                 setPlaying(false)
             })
             audio.addEventListener('play', () => {
                 setPlaying(true)
+                if (onVideoStart) {
+                    onVideoStart()
+                }
             })
             audioRef.current = audio
             if (autoplay) {
                 audio.play()
             }
-    }, [videoDetails, onVideoEnd, autoplay, curVId])
+    }, [videoDetails, onVideoEnd, onVideoStart, autoplay, curVId])
     useEffect(() => {
         fetchAudio()
     }, [fetchAudio])

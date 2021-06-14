@@ -11,10 +11,11 @@ import {VideoInfo} from '../types'
 interface Props {
     playlistVideos: Array<VideoInfo>;
     currentIndex: number | null;
-    onVideoEnd: () => void;
+    onVideoEnd?: () => void;
+    onVideoStart?: () => void;
 }
 
-const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd}: Props) => {
+const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStart}: Props) => {
     const [on, setOn] = useState<boolean>(false)
 
     const toggleExpand = useCallback(() => {
@@ -26,7 +27,9 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd}: Props) => 
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
                 <div className='player-container'>
-                {currentIndex >= playlistVideos.length? <LinearProgress/> : <Player videoDetails={playlistVideos[currentIndex].videoDetails} onVideoEnd={onVideoEnd}/>}
+                {currentIndex >= playlistVideos.length?
+                    <LinearProgress/> :
+                    <Player videoDetails={playlistVideos[currentIndex].videoDetails} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>}
                 </div>
                 <IconButton onClick={toggleExpand} color='secondary'>
                     {on ? <Down/> : <Up/>}
