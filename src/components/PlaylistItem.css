@@ -15,6 +15,7 @@
 .play-list-item-container img {
     width: 150px;
     margin-right: 10px;
+    object-fit: contain;
 }
 
 .play-list-item-container .content {

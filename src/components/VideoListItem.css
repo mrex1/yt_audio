@@ -7,6 +7,7 @@
 .video-list-item-container img {
     width: 150px;
     margin-right: 10px;
+    object-fit: contain;
 }
 
 .video-list-item-container .content {
