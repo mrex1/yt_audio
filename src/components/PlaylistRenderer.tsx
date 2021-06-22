@@ -41,14 +41,14 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
                 </IconButton>
             </div>
             <div className='lists-container'>
-            <div className={clsx({hide: !on}, 'list')}>
+            <div className={clsx('list')}>
                 {playlistVideos
                     .map((info, id) =>
                         <PlaylistItem key={`playlist${id}`} video={info.videoDetails} setVideo={() => playVideo(id)} playing={id === currentIndex}/>)}
             </div>
-            <Typography className={clsx({hide: !on}, 'divider')} variant='h5' component='h5'>Suggested</Typography>
+            <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {currentIndex < playlistVideos.length &&
-                <VideoList className={clsx({hide: !on}, 'list')} videos={playlistVideos[currentIndex].related_videos} setVideo={onAdd}/>}
+                <VideoList className={clsx('list')} videos={playlistVideos[currentIndex].related_videos} setVideo={onAdd}/>}
             </div>
         </div> : null
     )

@@ -1,7 +1,9 @@
 .playlist {
     position: fixed;
     bottom: 0;
+    top: calc(100% - 95px);
     width: 100%;
+    transition: 0.3s;
     background-color: rgb(27, 27, 27);
     color: white;
     display: flex;
@@ -10,6 +12,7 @@
 
 .playlist.open {
     height: 100vh;
+    top: 0px;
 }
 
 .top-section {
@@ -17,15 +20,12 @@
     flex-direction: row;
     align-items: center;
     background-color: black;
+    height: 95px;
 }
 
 .player-container {
     flex: 1;
     overflow: hidden;
-}
-
-.hide {
-    display: none;
 }
 
 .lists-container {
