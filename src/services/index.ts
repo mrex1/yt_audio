@@ -69,7 +69,9 @@ export class Playlist {
         this.next = this.next.bind(this)
     }
     add(videoId: string) {
-        this.videoIds.push(videoId)
+        if (this.videoIds.indexOf(videoId) === -1) {
+            this.videoIds.push(videoId)
+        }
     }
     get playlistVideos(): Array<Video> {
         return this.videoIds.map(id => this.api.getInfo(id))
