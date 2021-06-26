@@ -48,7 +48,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {currentIndex < playlistVideos.length &&
-                <VideoList className={clsx('list')} videos={[]} setVideo={onAdd}/>}
+                <VideoList className={clsx('list')} videos={[]} setVideo={onAdd} loadVideos={async () => {}}/>}
             </div>
         </div> : null
     )

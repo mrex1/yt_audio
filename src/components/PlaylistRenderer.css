@@ -2,6 +2,7 @@
     position: fixed;
     bottom: 0;
     top: calc(100% - 95px);
+    z-index: 9999;
     width: 100%;
     transition: 0.3s;
     background-color: rgb(27, 27, 27);

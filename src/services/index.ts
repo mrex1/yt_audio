@@ -1,6 +1,6 @@
 import {URL} from '../constants'
 import {VideoCache} from '../types'
-import {Result as SearchResult, Video} from 'ytsr'
+import {Result as SearchResult, Video, Continuation, ContinueResult} from 'ytsr'
 
 class API {
     private url: string
@@ -32,10 +32,31 @@ class API {
             return null
         }
     }
+    public async searchContinue(continuation: Continuation) : Promise<ContinueResult | null> {
+        try {
+            const res = await fetch(`${URL}/search`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(continuation)
+            })
+            const result: SearchResult = await res.json()
+            result.items.forEach(i => {
+                if (i.type === 'video') {
+                    this.cache[i.id] = i
+                }
+            })
+            return result
+        } catch (err) {
+            return null
+        }
+    }
 }
 
-export const api = new API(URL)
+export const api = new API(URL);
 
+(window as any).api = api
 export class Playlist {
     private videoIds: Array<string>;
     public current: number;
