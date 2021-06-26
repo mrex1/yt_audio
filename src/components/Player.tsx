@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import 'react-h5-audio-player/lib/styles.css'
 import {URL} from '../constants'
 import {Slider, IconButton, Typography, Tooltip} from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
@@ -8,7 +7,7 @@ import {formatTime, durationToSeconds} from '../utils'
 import {api} from '../services'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
-import DownloadIcon from '@material-ui/icons/GetApp';
+import DownloadIcon from '@material-ui/icons/GetApp'
 import { Video } from 'ytsr'
 
 
