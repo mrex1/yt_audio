@@ -74,8 +74,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {loading ?
-                <LinearProgress/>:
-                currentIndex < playlistVideos.length && <VideoList className={clsx('list')} videos={suggestions} setVideo={onAdd}/>
+                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> : <VideoList className={clsx('list')} videos={suggestions} setVideo={onAdd}/>
             }
             </div>
         </div> : null
