@@ -1,5 +1,5 @@
 import {URL} from '../constants'
-import {VideoCache} from '../types'
+import {VideoCache, SuggestVideo} from '../types'
 import {Result as SearchResult, Video, Continuation, ContinueResult} from 'ytsr'
 
 class API {
@@ -9,13 +9,27 @@ class API {
         this.url = url
         this.cache = {}
     }
-    public getInfo (videoId: string): Video {
+    public getInfo (videoId: string): Video | SuggestVideo {
         return this.cache[videoId]
     }
     public getAudio (videoId: string): HTMLAudioElement {
         const src = `${this.url}/stream?vid=${videoId}`
         const audio = new Audio(src)
         return audio
+    }
+    public async suggest (videoId: string): Promise<Array<SuggestVideo> | null> {
+        const res = await fetch(`${URL}/suggest?vid=${videoId}`)
+        try {
+            const result: SuggestVideo[] = await res.json()
+            result.forEach(v => {
+                if (!(v.id in this.cache)) {
+                    this.cache[v.id] = v
+                }
+            })
+            return result
+        } catch (err) {
+            return null
+        }
     }
     public async search (searchTerm: string): Promise<SearchResult | null> {
         const formatSearchTearm = searchTerm.split(' ').join('+')
@@ -73,7 +87,7 @@ export class Playlist {
             this.videoIds.push(videoId)
         }
     }
-    get playlistVideos(): Array<Video> {
+    get playlistVideos(): Array<Video | SuggestVideo> {
         return this.videoIds.map(id => this.api.getInfo(id))
     }
     setCurByVid(vid: string): number | void {

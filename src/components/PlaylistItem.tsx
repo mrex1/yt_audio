@@ -1,19 +1,21 @@
 import React, { useCallback } from 'react'
 import {Video} from 'ytsr'
+import {SuggestVideo} from '../types'
+import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
 import clsx from 'clsx'
 import './PlaylistItem.css'
 
 interface Props {
-    video: Video;
+    video: Video | SuggestVideo;
     playing?: boolean;
     setVideo: (videoId: string) => void;
 }
 
 const PlaylistItem = ({ video, setVideo, playing }: Props) => {
     const { title, author } = video
-    const thumbnailUrl = video.bestThumbnail.url
+    const thumbnailUrl = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
     const onVidClick = useCallback(() => {
         setVideo(video.id)
     }, [video, setVideo])

@@ -8,13 +8,14 @@ import { api, playlist } from './services'
 import { LinearProgress, ThemeProvider } from '@material-ui/core'
 import {Video, Continuation} from 'ytsr'
 import { useEffect } from 'react';
+import { SuggestVideo } from './types';
 
 function App() {
 	const [videos, setVideos] = useState<Array<Video>>([])
 	const [end, setEnd] = useState<boolean>(true)
 	const [autoplay, setAutoplay] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(false)
-	const [playlistVideos, setPlaylistVideos] = useState<Array<Video>>([])
+	const [playlistVideos, setPlaylistVideos] = useState<Array<Video | SuggestVideo>>([])
 	const [continuation, setContinuation] = useState<Continuation | null>(null)
 	const [current, setCurrent] = useState<number>(-1)
 	const [searchTerm, setSearchTerm] = useState<string>('')

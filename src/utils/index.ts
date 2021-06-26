@@ -1,3 +1,5 @@
+import {SuggestVideo} from '../types'
+
 export const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
 
 export const formatTime = (time: number) => {
@@ -16,4 +18,8 @@ export const durationToSeconds = (duration: string | null): number => {
         base *= 60
     }
     return result
+}
+
+export const isSuggestVideo = (obj: any): obj is SuggestVideo => {
+    return obj.thumbnail
 }
