@@ -15,11 +15,11 @@ const VideoList = ({videos, setVideo, className, spaceBottom, loadVideos}: Props
     const [loading, setLoading] = useState<boolean>(false)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
         const d = e.currentTarget
-        if (d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
+        if (!loading && d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
             setLoading(true)
             loadVideos().then(() => setLoading(false))
         }
-    }, [loadVideos])
+    }, [loadVideos, loading])
     
     return (
     <div 
