@@ -1,3 +1,10 @@
 .background {
   background-color: rgb(27, 27, 27);
+  display: flex;
+  flex-direction: column;
+}
+
+.video-list {
+  flex: 1;
+  overflow: auto;
 }

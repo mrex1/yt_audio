@@ -6,7 +6,7 @@ import PlaylistRenderer from './components/PlaylistRenderer'
 import { theme } from './constants'
 import { api, playlist } from './services'
 import { LinearProgress, ThemeProvider } from '@material-ui/core'
-import { Video, VideoInfo } from './types';
+import {Video, Continuation} from 'ytsr'
 import { useEffect } from 'react';
 
 function App() {
@@ -14,7 +14,8 @@ function App() {
 	const [end, setEnd] = useState<boolean>(true)
 	const [autoplay, setAutoplay] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(false)
-	const [playlistVideos, setPlaylistVideos] = useState<Array<VideoInfo>>([])
+	const [playlistVideos, setPlaylistVideos] = useState<Array<Video>>([])
+	const [continuation, setContinuation] = useState<Continuation | null>(null)
 	const [current, setCurrent] = useState<number>(-1)
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -28,7 +29,12 @@ function App() {
 			try {
 				setLoading(true)
 				const result = await api.search(searchTerm)
-				setVideos(result)
+				if (result) {
+					setVideos(result.items.filter(i => i.type === 'video') as Video[])
+					setContinuation(result.continuation)
+				} else {
+					setVideos([])
+				}
 				setLoading(false)
 			} catch (err) {
 				console.log(err)
@@ -38,7 +44,8 @@ function App() {
 	}, [searchTerm])
 
 	const setVideo = useCallback((videoId: string) => {
-		playlist.add(videoId).then(() => setPlaylistVideos(playlist.playlistVideos))
+		playlist.add(videoId)
+		setPlaylistVideos(playlist.playlistVideos)
 		if (end && autoplay) {
 			setEnd(false)
 			const next = playlist.setCurByVid(videoId)
@@ -74,11 +81,28 @@ function App() {
 		playlist.current = id
 		setCurrent(id)
 	}, [])
+
+	const loadMoreSearchResult = useCallback(async () => {
+		if (continuation === null) return
+		const result = await api.searchContinue(continuation)
+		if (result) {
+			const newVideos = result.items.filter(i => i.type === 'video') as Video[]
+			setVideos(videos.concat(newVideos))
+			setContinuation(result.continuation)
+		}
+	}, [continuation, videos])
 	return (
 		<ThemeProvider theme={theme}>
 			<div className='background' style={{ height: '100vh', overflow: 'hidden' }}>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
-				{loading ? <LinearProgress /> : <VideoList spaceBottom videos={videos} setVideo={setVideo} />}
+				{loading ?
+					<LinearProgress /> :
+					<VideoList
+						className={'video-list'}
+						spaceBottom
+						videos={videos}
+						setVideo={setVideo}
+						loadVideos={loadMoreSearchResult}/>}
 				<PlaylistRenderer
 				autoplay={autoplay}
 				setAutoplay={setAutoplay}

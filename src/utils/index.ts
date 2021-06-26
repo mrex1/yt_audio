@@ -3,3 +3,17 @@ export const zeroPad = (num: number, places: number) => String(num).padStart(pla
 export const formatTime = (time: number) => {
     return `${zeroPad(Math.floor(time/60), 2)}:${zeroPad(time%60, 2)}`
 }
+
+export const durationToSeconds = (duration: string | null): number => {
+    if (duration === null) {
+        return 0
+    }
+    const numbers = duration.split(':')
+    let result: number = 0
+    let base = 1
+    for (let i = 0 ; i < numbers.length ; i++) {
+        result += parseInt(numbers[numbers.length - 1 - i])*base
+        base *= 60
+    }
+    return result
+}

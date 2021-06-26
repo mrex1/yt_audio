@@ -6,11 +6,11 @@ import Up from '@material-ui/icons/ExpandLess'
 import Down from '@material-ui/icons/ExpandMore'
 import Player from './Player'
 import VideoList from './VideoList'
-import {VideoInfo} from '../types'
+import {Video} from 'ytsr'
 import PlaylistItem from "./PlaylistItem"
 
 interface Props {
-    playlistVideos: Array<VideoInfo>;
+    playlistVideos: Array<Video>;
     currentIndex: number;
     onVideoEnd?: () => void;
     onVideoStart?: () => void;
@@ -34,7 +34,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
                 <div className='player-container'>
                 {currentIndex >= playlistVideos.length?
                     <LinearProgress/> :
-                    <Player autoplay={autoplay} setAutoplay={setAutoplay} videoDetails={playlistVideos[currentIndex].videoDetails} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>}
+                    <Player autoplay={autoplay} setAutoplay={setAutoplay} videoDetails={playlistVideos[currentIndex]} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>}
                 </div>
                 <IconButton onClick={toggleExpand} color='secondary'>
                     {on ? <Down/> : <Up/>}
@@ -44,11 +44,11 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
             <div className={clsx('list')}>
                 {playlistVideos
                     .map((info, id) =>
-                        <PlaylistItem key={`playlist${id}`} video={info.videoDetails} setVideo={() => playVideo(id)} playing={id === currentIndex}/>)}
+                        <PlaylistItem key={`playlist${id}`} video={info} setVideo={() => playVideo(id)} playing={id === currentIndex}/>)}
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {currentIndex < playlistVideos.length &&
-                <VideoList className={clsx('list')} videos={playlistVideos[currentIndex].related_videos} setVideo={onAdd}/>}
+                <VideoList className={clsx('list')} videos={[]} setVideo={onAdd} loadVideos={async () => {}}/>}
             </div>
         </div> : null
     )

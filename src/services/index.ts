@@ -1,5 +1,6 @@
 import {URL} from '../constants'
-import {Video, VideoCache, VideoDetails, VideoInfo} from '../types'
+import {VideoCache} from '../types'
+import {Result as SearchResult, Video, Continuation, ContinueResult} from 'ytsr'
 
 class API {
     private url: string
@@ -8,69 +9,70 @@ class API {
         this.url = url
         this.cache = {}
     }
-    public async getInfo (videoId: string): Promise<VideoInfo> {
-        const cachedInfo = this.cache[videoId]
-        if (cachedInfo) {
-            return cachedInfo
-        }
-        const res = await fetch(`${this.url}/info/${videoId}`)
-        const data = await res.json()
-        data.videoDetails.lengthSeconds = parseInt(data.videoDetails.lengthSeconds)
-        data.videoDetails.thumbnailUrl = data.videoDetails.thumbnail.thumbnails[0].url
-        this.cache[videoId] = data
-        data.related_videos = data.related_videos.map((v: any): VideoDetails => {
-            const videoId = v.id
-            const thumbnailUrl = v.thumbnails[0].url
-            const title = v.title
-            const author = v.author.name
-            const lengthSeconds = v.length_seconds
-            return {videoId, thumbnailUrl, title, author, lengthSeconds}
-        })
-        return data
+    public getInfo (videoId: string): Video {
+        return this.cache[videoId]
     }
     public getAudio (videoId: string): HTMLAudioElement {
-        const src = `${this.url}/stream/${videoId}`
+        const src = `${this.url}/stream?vid=${videoId}`
         const audio = new Audio(src)
         return audio
     }
-    public async search (searchTerm: string): Promise<Array<Video>> {
+    public async search (searchTerm: string): Promise<SearchResult | null> {
         const formatSearchTearm = searchTerm.split(' ').join('+')
-        const res = await fetch(`${URL}/search/` + formatSearchTearm)
-        const result = await res.json()
-        const finalResult = result.map((v: any) => {
-            v.videoId = v.id
-            v.thumbnailUrl = v.thumbnail.url
-            return v
-        })
-        return finalResult
+        try {
+            const res = await fetch(`${URL}/search?q=${formatSearchTearm}`)
+            const result: SearchResult = await res.json()
+            result.items.forEach(i => {
+                if (i.type === 'video') {
+                    this.cache[i.id] = i
+                }
+            })
+            return result
+        } catch (err) {
+            return null
+        }
+    }
+    public async searchContinue(continuation: Continuation) : Promise<ContinueResult | null> {
+        try {
+            const res = await fetch(`${URL}/search`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(continuation)
+            })
+            const result: SearchResult = await res.json()
+            result.items.forEach(i => {
+                if (i.type === 'video') {
+                    this.cache[i.id] = i
+                }
+            })
+            return result
+        } catch (err) {
+            return null
+        }
     }
 }
 
-export const api = new API(URL)
+export const api = new API(URL);
 
+(window as any).api = api
 export class Playlist {
     private videoIds: Array<string>;
-    private videoInfos: VideoCache;
     public current: number;
     private api: API;
     constructor(api: API, videoIds?: Array<string>) {
         this.videoIds = videoIds ? videoIds : []
         this.current = -1
-        this.videoInfos = {}
         this.api = api
         this.add = this.add.bind(this)
         this.next = this.next.bind(this)
     }
-    async add(videoId: string) {
-        if (videoId in this.videoInfos) {
-            return
-        }
+    add(videoId: string) {
         this.videoIds.push(videoId)
-        const info = await this.api.getInfo(videoId)
-        this.videoInfos[videoId] = info
     }
-    get playlistVideos(): Array<VideoInfo> {
-        return this.videoIds.map(id => this.videoInfos[id])
+    get playlistVideos(): Array<Video> {
+        return this.videoIds.map(id => this.api.getInfo(id))
     }
     setCurByVid(vid: string): number | void {
         const newCur = this.videoIds.indexOf(vid)
@@ -86,14 +88,7 @@ export class Playlist {
         }
     }
     suggest(): string | void {
-        if (this.current === -1 || this.current >= this.videoIds.length) {
-            return
-        }
-        for (let v of this.playlistVideos[this.current].related_videos) {
-            if (this.videoIds.indexOf(v.videoId) === -1) {
-                return v.videoId
-            }
-        }
+        return
     }
 }
 
