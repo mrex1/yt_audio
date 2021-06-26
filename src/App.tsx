@@ -88,7 +88,6 @@ function App() {
 		if (result) {
 			const newVideos = result.items.filter(i => i.type === 'video') as Video[]
 			setVideos(videos.concat(newVideos))
-			console.log(newVideos)
 			setContinuation(result.continuation)
 		}
 	}, [continuation, videos])
