@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {URL} from '../constants'
-import {Slider, IconButton, Typography, Tooltip} from '@material-ui/core'
+import {Slider, IconButton, Typography, Tooltip, CircularProgress} from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled'
 import {formatTime, durationToSeconds} from '../utils'
@@ -23,9 +23,10 @@ interface Props{
 const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}: Props) => {
     const [playing, setPlaying] = useState<boolean>(false)
     const [curVId, setCurVId] = useState<string | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState<number>(0)
     const audioRef = useRef<HTMLAudioElement | null>(null)
-    const fetchAudio = useCallback(() => {
+    const fetchAudio = useCallback(async () => {
             if (curVId === videoDetails.id) {
                 return
             }
@@ -35,7 +36,10 @@ const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}:
                 audioRef.current.ontimeupdate = null
                 setCurrentTime(0)
             }
-            const audio = api.getAudio(videoDetails.id)
+            setLoading(true)
+            const audio = await api.getAudio(videoDetails.id)
+            setLoading(false)
+            if (!audio) return
             audio.ontimeupdate = () => {
                 setCurrentTime(Math.ceil(audio.currentTime))
             }
@@ -97,9 +101,10 @@ const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}:
                 <span style={{margin: 5, marginLeft: 15}}>{videoDetails.duration}</span>
             </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                {loading ? <div style={{padding: 12}}><CircularProgress color='secondary' size={22}/></div> :
                 <IconButton onClick={playOrPause} color='secondary'>
                     {playing ? <PauseIcon/> : <PlayArrowIcon/>}
-                </IconButton>
+                </IconButton>}
                 <IconButton onClick={download} color='secondary'>
                     <DownloadIcon/>
                 </IconButton>
