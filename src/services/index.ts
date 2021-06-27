@@ -76,7 +76,6 @@ class API {
 
 export const api = new API(URL);
 
-(window as any).api = api
 export class Playlist {
     private videoIds: Array<string>;
     public current: number;
