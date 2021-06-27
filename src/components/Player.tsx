@@ -32,13 +32,13 @@ const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}:
             setCurVId(videoDetails.id)
             if (audioRef.current) {
                 audioRef.current.pause()
+                audioRef.current.ontimeupdate = null
                 setCurrentTime(0)
             }
             const audio = api.getAudio(videoDetails.id)
-            audio.addEventListener('timeupdate', () => {
-                if (audio.paused) return
+            audio.ontimeupdate = () => {
                 setCurrentTime(Math.ceil(audio.currentTime))
-            })
+            }
             audio.addEventListener('ended', () => {
                 setPlaying(false)
                 if (onVideoEnd) {
