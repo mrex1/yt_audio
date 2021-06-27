@@ -36,7 +36,7 @@ const Player = ({videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay}:
             }
             const audio = api.getAudio(videoDetails.id)
             audio.addEventListener('timeupdate', () => {
-                setCurrentTime(Math.round(audio.currentTime))
+                setCurrentTime(Math.ceil(audio.currentTime))
             })
             audio.addEventListener('ended', () => {
                 setPlaying(false)
