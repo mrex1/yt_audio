@@ -4,6 +4,10 @@ export interface VideoCache {
     [videoId: string]: Video | SuggestVideo
 }
 
+export interface SuggestionsCache {
+    [videoId: string]: Array<SuggestVideo>
+}
+
 export interface SuggestVideo {
     thumbnail: Image,
     author: {

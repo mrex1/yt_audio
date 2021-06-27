@@ -1,37 +1,43 @@
-import {URL} from '../constants'
-import {VideoCache, SuggestVideo} from '../types'
-import {Result as SearchResult, Video, Continuation, ContinueResult} from 'ytsr'
+import { URL } from '../constants'
+import { VideoCache, SuggestVideo, SuggestionsCache } from '../types'
+import { Result as SearchResult, Video, Continuation, ContinueResult } from 'ytsr'
 
 class API {
     private url: string
     private cache: VideoCache
+    private suggestionsCache: SuggestionsCache
     constructor(url: string) {
         this.url = url
         this.cache = {}
+        this.suggestionsCache = {}
     }
-    public getInfo (videoId: string): Video | SuggestVideo {
+    public getInfo(videoId: string): Video | SuggestVideo {
         return this.cache[videoId]
     }
-    public getAudio (videoId: string): HTMLAudioElement {
+    public getAudio(videoId: string): HTMLAudioElement {
         const src = `${this.url}/stream?vid=${videoId}`
         const audio = new Audio(src)
         return audio
     }
-    public async suggest (videoId: string): Promise<Array<SuggestVideo> | null> {
-        const res = await fetch(`${URL}/suggest?vid=${videoId}`)
+    public async suggest(videoId: string): Promise<Array<SuggestVideo> | null> {
+        if (videoId in this.suggestionsCache) {
+            return this.suggestionsCache[videoId]
+        }
         try {
+            const res = await fetch(`${URL}/suggest?vid=${videoId}`)
             const result: SuggestVideo[] = await res.json()
             result.forEach(v => {
                 if (!(v.id in this.cache)) {
                     this.cache[v.id] = v
                 }
             })
+            this.suggestionsCache[videoId] = result
             return result
         } catch (err) {
             return null
         }
     }
-    public async search (searchTerm: string): Promise<SearchResult | null> {
+    public async search(searchTerm: string): Promise<SearchResult | null> {
         const formatSearchTearm = searchTerm.split(' ').join('+')
         try {
             const res = await fetch(`${URL}/search?q=${formatSearchTearm}`)
@@ -46,7 +52,7 @@ class API {
             return null
         }
     }
-    public async searchContinue(continuation: Continuation) : Promise<ContinueResult | null> {
+    public async searchContinue(continuation: Continuation): Promise<ContinueResult | null> {
         try {
             const res = await fetch(`${URL}/search`, {
                 method: 'post',
@@ -97,14 +103,27 @@ export class Playlist {
             return this.current
         }
     }
-    next(): number | void {
+    async next(): Promise<number | void> {
         if (this.current < this.videoIds.length - 1) {
             this.current += 1
             return this.current
         }
+        const suggestion = await this.suggest(this.videoIds[this.current])
+        if (suggestion) {
+            this.add(suggestion)
+            return await this.next()
+        }
     }
-    suggest(): string | void {
-        return
+    // return a suggested video id that is not in the playlist
+    private async suggest(videoId: string): Promise<string | void> {
+        const suggestions = await this.api.suggest(videoId)
+        if (suggestions) {
+            for (let suggestion of suggestions) {
+                if (this.videoIds.indexOf(suggestion.id) === -1) {
+                    return suggestion.id
+                }
+            }
+        }
     }
 }
 
