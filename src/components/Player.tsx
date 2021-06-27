@@ -9,10 +9,11 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import DownloadIcon from '@material-ui/icons/GetApp'
 import { Video } from 'ytsr'
+import { SuggestVideo } from '../types'
 
 
 interface Props{
-    videoDetails: Video;
+    videoDetails: Video | SuggestVideo;
     onVideoEnd?: () => void;
     onVideoStart?: () => void;
     autoplay: boolean;

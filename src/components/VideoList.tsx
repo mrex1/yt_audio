@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import VideoListItem from './VideoListItem'
 import {Video} from 'ytsr'
+import {SuggestVideo} from '../types'
 import { LinearProgress } from '@material-ui/core'
 
 interface Props{
-    videos: Array<Video>;
+    videos: Array<Video | SuggestVideo>;
     setVideo: (video: string) => void;
-    loadVideos: () => Promise<void>;
+    loadVideos?: () => Promise<void>;
     className?: string;
     spaceBottom?: boolean;
 }
@@ -15,7 +16,7 @@ const VideoList = ({videos, setVideo, className, spaceBottom, loadVideos}: Props
     const [loading, setLoading] = useState<boolean>(false)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
         const d = e.currentTarget
-        if (!loading && d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
+        if (loadVideos && !loading && d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
             setLoading(true)
             loadVideos().then(() => setLoading(false))
         }

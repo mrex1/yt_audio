@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react'
 import {Video} from 'ytsr'
+import {SuggestVideo} from '../types'
+import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import './VideoListItem.css'
 
 interface Props {
-    video: Video;
+    video: Video | SuggestVideo;
     setVideo: (videoId: string) => void;
 }
 
 const VideoListItem = ({ video, setVideo }: Props) => {
-    const { title, id } = video
-    const thumbnail = video.bestThumbnail.url
+    const {title, id} = video
+    const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
     const onVidClick = useCallback(() => {
         setVideo(video.id)
     }, [video, setVideo])
