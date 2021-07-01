@@ -14,10 +14,14 @@ class API {
     public getInfo(videoId: string): Video | SuggestVideo {
         return this.cache[videoId]
     }
-    public getAudio(videoId: string): HTMLAudioElement {
-        const url = `${this.url}/stream/v2?vid=${videoId}`
-        const audio = new Audio(url)
-        return audio
+    public getAudioURL(videoId: string): string {
+        return `${this.url}/stream/v2?vid=${videoId}`
+    }
+    public getAudioDownloadLink(videoId: string): HTMLAnchorElement {
+        const a = document.createElement('a')
+        a.href = `${this.url}/download?vid=${videoId}`
+        a.target = '_blank'
+        return a
     }
     public async suggest(videoId: string): Promise<Array<SuggestVideo> | null> {
         if (videoId in this.suggestionsCache) {
@@ -127,3 +131,22 @@ export class Playlist {
 }
 
 export const playlist = new Playlist(api)
+
+export class AudioManager {
+    public audio: HTMLAudioElement
+    private api: API
+    constructor(api: API, vid?: string) {
+        this.api = api
+        this.audio = new Audio()
+        if (vid) {
+            this.update(vid)
+        }
+    }
+
+    public update(vid: string): void {
+        const url = this.api.getAudioURL(vid)
+        this.audio.src = url
+    }
+}
+
+export const audioManager = new AudioManager(api);

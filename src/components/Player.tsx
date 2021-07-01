@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { URL } from '../constants'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Slider, IconButton, Typography, Tooltip, CircularProgress } from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled'
 import { formatTime, durationToSeconds } from '../utils'
-import { api } from '../services'
+import { api, audioManager } from '../services'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import DownloadIcon from '@material-ui/icons/GetApp'
@@ -25,69 +24,59 @@ const Player = ({ videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay 
     const [curVId, setCurVId] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState<number>(0)
-    const audioRef = useRef<HTMLAudioElement | null>(null)
 
-    const fetchAudio = useCallback(async (videoDetails: Video | SuggestVideo) => {
+    const fetchAudio = useCallback((videoDetails: Video | SuggestVideo) => {
         setCurVId(videoDetails.id)
-        if (audioRef.current) {
-            audioRef.current.pause()
-            audioRef.current.ontimeupdate = null
-            setCurrentTime(0)
+        audioManager.update(videoDetails.id)
+        setCurrentTime(0)
+        if (autoplay) {
+            audioManager.audio.play().catch(() => {})
         }
-        const audio = api.getAudio(videoDetails.id)
-        if (!audio) return
-        audio.ontimeupdate = () => {
-            setCurrentTime(Math.ceil(audio.currentTime))
-        }
-        audio.addEventListener('ended', () => {
-            setPlaying(false)
-            if (onVideoEnd) {
-                onVideoEnd()
-            }
-        })
-        audio.addEventListener('pause', () => {
-            setPlaying(false)
-        })
-        audio.addEventListener('play', () => {
+    }, [autoplay])
+
+    useEffect(() => {
+        audioManager.audio.ontimeupdate = () => setCurrentTime(Math.ceil(audioManager.audio.currentTime))
+        audioManager.audio.onpause = () => setPlaying(false)
+        audioManager.audio.onloadeddata = () => setLoading(false)
+        audioManager.audio.onloadstart = () => setLoading(true)
+    }, [])
+
+    useEffect(() => {
+        audioManager.audio.onplay = () => {
             setPlaying(true)
             if (onVideoStart) {
                 onVideoStart()
             }
-        })
-        audioRef.current = audio
-        if (autoplay) {
-            audio.play()
         }
-    }, [onVideoEnd, onVideoStart, autoplay])
+        audioManager.audio.onended = () => {
+            setPlaying(false)
+            if (onVideoEnd) {
+                onVideoEnd()
+            }
+        }
+    }, [onVideoStart, onVideoEnd])
 
     useEffect(() => {
-        if (!loading && curVId !== videoDetails.id) {
-            setLoading(true)
-            fetchAudio(videoDetails).then(() => setLoading(false))
+        if (curVId !== videoDetails.id) {
+            fetchAudio(videoDetails)
         }
-    }, [fetchAudio, loading, curVId, videoDetails])
+    }, [fetchAudio, curVId, videoDetails])
 
     const download = useCallback(() => {
-        const a = document.createElement('a')
-        a.href = `${URL}/download?vid=${videoDetails.id}`
-        a.target = '_blank'
+        const a = api.getAudioDownloadLink(videoDetails.id)
         a.click()
     }, [videoDetails])
 
     const playOrPause = useCallback(() => {
-        if (audioRef.current) {
-            if (playing) {
-                audioRef.current.pause()
-            } else {
-                audioRef.current.play()
-            }
+        if (playing) {
+            audioManager.audio.pause()
+        } else {
+            audioManager.audio.play()
         }
     }, [playing])
 
     const onSliderChange = useCallback((_, val) => {
-        if (audioRef.current) {
-            audioRef.current.currentTime = val
-        }
+        audioManager.audio.currentTime = val
     }, [])
 
     const handleAutoplayBtn = useCallback(() => {
