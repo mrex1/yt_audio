@@ -14,16 +14,10 @@ class API {
     public getInfo(videoId: string): Video | SuggestVideo {
         return this.cache[videoId]
     }
-    public async getAudio(videoId: string): Promise<HTMLAudioElement | void> {
-        try {
-            const audioInfos = await fetch(`${this.url}/stream/v2?vid=${videoId}`).then(r => r.json())
-            const url = audioInfos[0].url
-            const audio = new Audio(url)
-            return audio
-        } catch (err) {
-            console.error(err)
-            return
-        }
+    public getAudio(videoId: string): HTMLAudioElement {
+        const url = `${this.url}/stream/v2?vid=${videoId}`
+        const audio = new Audio(url)
+        return audio
     }
     public async suggest(videoId: string): Promise<Array<SuggestVideo> | null> {
         if (videoId in this.suggestionsCache) {

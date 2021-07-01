@@ -34,7 +34,7 @@ const Player = ({ videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay 
             audioRef.current.ontimeupdate = null
             setCurrentTime(0)
         }
-        const audio = await api.getAudio(videoDetails.id)
+        const audio = api.getAudio(videoDetails.id)
         if (!audio) return
         audio.ontimeupdate = () => {
             setCurrentTime(Math.ceil(audio.currentTime))
