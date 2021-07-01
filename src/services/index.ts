@@ -38,7 +38,7 @@ class API {
         }
     }
     public async search(searchTerm: string): Promise<SearchResult | null> {
-        const formatSearchTearm = searchTerm.split(' ').join('+')
+        const formatSearchTearm = encodeURIComponent(searchTerm.replace(' ', '+'))
         try {
             const res = await fetch(`${URL}/search?q=${formatSearchTearm}`)
             const result: SearchResult = await res.json()
