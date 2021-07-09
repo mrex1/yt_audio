@@ -94,7 +94,7 @@ function App() {
 		<videoContext.Provider value={{videos, setVideo}}>
 		<autoplayContext.Provider value={{autoplay, setAutoplay}}>
 		<ThemeProvider theme={theme}>
-			<div className='background' style={{ height: '100vh', overflow: 'hidden' }}>
+			<div className='background'>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
 				{loading ?
 					<LinearProgress /> :

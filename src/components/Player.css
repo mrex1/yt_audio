@@ -13,6 +13,16 @@
     align-items: center;
 }
 
+.player-current-time{
+    margin: 5px;
+    margin-right: 15px;
+}
+
+.player-end-time{
+    margin: 5px;
+    margin-left: 15px;
+}
+
 .player-bottom-container {
     display: flex;
     flex-direction: row;

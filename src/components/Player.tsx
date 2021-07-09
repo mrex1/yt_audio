@@ -86,9 +86,9 @@ const Player = ({ videoDetails }: Props) => {
     return (
         <div className='player-container'>
             <div className='player-progress-container'>
-                <span style={{ margin: 5, marginRight: 15 }}>{formatTime(currentTime)}</span>
+                <span className='player-current-time'>{formatTime(currentTime)}</span>
                 <Slider color='secondary' onChange={onSliderChange} max={durationToSeconds(videoDetails.duration)} min={0} value={currentTime} />
-                <span style={{ margin: 5, marginLeft: 15 }}>{videoDetails.duration}</span>
+                <span className='player-end-time'>{videoDetails.duration}</span>
             </div>
             <div className='player-bottom-container'>
                 {loading ? <div style={{ padding: 12 }}><CircularProgress color='secondary' size={22} /></div> :
