@@ -27,23 +27,20 @@ function App() {
 		setSearchTerm(txt)
 	}, [])
 
-	const onSearch = useCallback(() => {
-		const fetchData = async () => {
-			try {
-				setLoading(true)
-				const result = await api.search(searchTerm)
-				if (result) {
-					setVideos(result.items.filter(i => i.type === 'video') as Video[])
-					setContinuation(result.continuation)
-				} else {
-					setVideos([])
-				}
-				setLoading(false)
-			} catch (err) {
-				console.log(err)
+	const onSearch = useCallback(async () => {
+		setLoading(true)
+		try {
+			const result = await api.search(searchTerm)
+			if (result) {
+				setVideos(result.items.filter(i => i.type === 'video') as Video[])
+				setContinuation(result.continuation)
+			} else {
+				setVideos([])
 			}
+		} catch (err) {
+			console.log(err)
 		}
-		fetchData()
+		setLoading(false)
 	}, [searchTerm])
 
 	const setVideo = useCallback((videoId: string) => {
