@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
 import { Slider, IconButton, Typography, Tooltip, CircularProgress } from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled'
@@ -9,22 +9,21 @@ import PauseIcon from '@material-ui/icons/Pause'
 import DownloadIcon from '@material-ui/icons/GetApp'
 import { Video } from 'ytsr'
 import { SuggestVideo } from '../types'
+import { autoplayContext, videoListenerContext } from '../context'
 import './Player.css'
 
 
 interface Props {
     videoDetails: Video | SuggestVideo;
-    onVideoEnd?: () => void;
-    onVideoStart?: () => void;
-    autoplay: boolean;
-    setAutoplay: (on: boolean) => void;
 }
 
-const Player = ({ videoDetails, onVideoEnd, onVideoStart, autoplay, setAutoplay }: Props) => {
+const Player = ({ videoDetails }: Props) => {
     const [playing, setPlaying] = useState<boolean>(false)
     const [curVId, setCurVId] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState<number>(0)
+    const {autoplay, setAutoplay} = useContext(autoplayContext)
+    const {onVideoEnd, onVideoStart} = useContext(videoListenerContext)
 
     useEffect(() => {
         audioManager.audio.ontimeupdate = () => setCurrentTime(Math.ceil(audioManager.audio.currentTime))
