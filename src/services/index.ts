@@ -11,6 +11,9 @@ class API {
         this.cache = {}
         this.suggestionsCache = {}
     }
+    public getYoutubeLink(videoId: string): string {
+        return `https://youtu.be/${videoId}`
+    }
     public getInfo(videoId: string): Video | SuggestVideo {
         return this.cache[videoId]
     }

@@ -3,6 +3,7 @@ import {Video} from 'ytsr'
 import {SuggestVideo} from '../types'
 import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
+import {api} from '../services'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import './VideoListItem.css'
 
@@ -28,9 +29,9 @@ const VideoListItem = ({ video, setVideo }: Props) => {
             <div className='title'>
                 {title}
             </div>
-            <div className="subtitle">
-                {id}
-            </div>
+            <a className="subtitle" href={api.getYoutubeLink(id)} target='_blank' rel='noreferrer'>
+                Open in YouTube
+            </a>
             </div>
             <IconButton onClick={onVidClick} color='secondary'>
                 <AddCircleOutlineIcon/>

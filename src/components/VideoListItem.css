@@ -27,4 +27,5 @@
 .video-list-item-container .subtitle {
     font-size: 13px;
     color: silver;
+    text-decoration: none;
 }
