@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, useEffect, useContext } from "react"
 import clsx from 'clsx'
 import './PlaylistRenderer.css'
 import {IconButton, LinearProgress, Typography} from '@material-ui/core'
@@ -10,23 +10,19 @@ import {Video} from 'ytsr'
 import PlaylistItem from "./PlaylistItem"
 import {SuggestVideo} from '../types'
 import {api} from '../services'
+import {videoContext, playlistActionContext} from '../context'
 
 interface Props {
     playlistVideos: Array<Video | SuggestVideo>;
     currentIndex: number;
-    onVideoEnd?: () => void;
-    onVideoStart?: () => void;
-    autoplay: boolean;
-    setAutoplay: (on: boolean) => void;
-    playVideo: (id: number) => void;
-    onAdd: (videoId: string) => void;
 }
 
-const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStart, playVideo, onAdd, autoplay, setAutoplay}: Props) => {
+const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
     const [on, setOn] = useState<boolean>(false)
     const [suggestions, setSuggestions] = useState<SuggestVideo[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const [currentVId, setCurrentVId] = useState<string | null>(null)
+    const {playVideo} = useContext(playlistActionContext)
 
     const toggleExpand = useCallback(() => {
         setOn(!on)
@@ -54,13 +50,13 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
     }, [currentIndex, playlistVideos])
 
     return (
-        currentIndex !== -1 ?
+        <videoContext.Provider value={{videos: suggestions}}>
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
                 <div className='player-container'>
                 {currentIndex >= playlistVideos.length?
                     <LinearProgress/> :
-                    <Player autoplay={autoplay} setAutoplay={setAutoplay} videoDetails={playlistVideos[currentIndex]} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>}
+                    <Player videoDetails={playlistVideos[currentIndex]}/>}
                 </div>
                 <IconButton onClick={toggleExpand} color='secondary'>
                     {on ? <Down/> : <Up/>}
@@ -70,14 +66,19 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, onVideoEnd, onVideoStar
             <div className={clsx('list')}>
                 {playlistVideos
                     .map((info, id) =>
-                        <PlaylistItem key={`playlist${id}`} video={info} setVideo={() => playVideo(id)} playing={id === currentIndex}/>)}
+                        <PlaylistItem
+                            key={`playlist${id}`}
+                            video={info}
+                            playVideo={() => playVideo(id)}
+                            playing={id === currentIndex}/>)}
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {loading ?
-                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> : <VideoList className={clsx('list')} videos={suggestions} setVideo={onAdd}/>
+                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> : <VideoList className={clsx('list')}/>
             }
             </div>
-        </div> : null
+        </div>
+        </videoContext.Provider>
     )
 }
 

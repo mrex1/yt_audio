@@ -9,6 +9,8 @@ import { LinearProgress, ThemeProvider } from '@material-ui/core'
 import {Video, Continuation} from 'ytsr'
 import { useEffect } from 'react';
 import { SuggestVideo } from './types';
+import { videoContext, autoplayContext, videoListenerContext, playlistActionContext } from './context'
+
 
 function App() {
 	const [videos, setVideos] = useState<Array<Video>>([])
@@ -17,7 +19,7 @@ function App() {
 	const [loading, setLoading] = useState<boolean>(false)
 	const [playlistVideos, setPlaylistVideos] = useState<Array<Video | SuggestVideo>>([])
 	const [continuation, setContinuation] = useState<Continuation | null>(null)
-	const [current, setCurrent] = useState<number>(-1)
+	const [current, setCurrent] = useState<number | null>(null)
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
 	const onSearchTermChange = useCallback((evt) => {
@@ -25,48 +27,45 @@ function App() {
 		setSearchTerm(txt)
 	}, [])
 
-	const onSearch = useCallback(() => {
-		const fetchData = async () => {
-			try {
-				setLoading(true)
-				const result = await api.search(searchTerm)
-				if (result) {
-					setVideos(result.items.filter(i => i.type === 'video') as Video[])
-					setContinuation(result.continuation)
-				} else {
-					setVideos([])
-				}
-				setLoading(false)
-			} catch (err) {
-				console.log(err)
+	const onSearch = useCallback(async () => {
+		setLoading(true)
+		try {
+			const result = await api.search(searchTerm)
+			if (result) {
+				setVideos(result.items.filter(i => i.type === 'video') as Video[])
+				setContinuation(result.continuation)
+			} else {
+				setVideos([])
 			}
+		} catch (err) {
+			console.log(err)
 		}
-		fetchData()
+		setLoading(false)
 	}, [searchTerm])
 
-	const setVideo = useCallback((videoId: string) => {
+	const addToPlaylist = useCallback((videoId: string) => {
 		playlist.add(videoId)
 		setPlaylistVideos(playlist.playlistVideos)
-		if (end && autoplay) {
-			setEnd(false)
-			const next = playlist.setCurByVid(videoId)
-			if (next !== undefined) {
-				setCurrent(next)
-			}
+	}, [])
+
+	const addSuggestionToPlaylist = useCallback(async () => {
+		const suggestion = await playlist.suggest()
+		if (suggestion) {
+			addToPlaylist(suggestion)
 		}
-	}, [end, autoplay])
+	}, [addToPlaylist])
 
 	useEffect(() => {
 		//for autoplaying next video
-		if (end && autoplay && playlist.playlistVideos.length > 0) {
-			playlist.next().then((next) => {
-				if (next !== undefined) {
-					setPlaylistVideos(playlist.playlistVideos)
-					setCurrent(next)
-				}
-			})
+		if (end && autoplay && playlistVideos.length > 0) {
+			const next = playlist.next()
+			if (next === undefined) {
+				addSuggestionToPlaylist()
+			} else {
+				setCurrent(next)
+			}
 		}
-	}, [end, autoplay, setVideo])
+	}, [end, autoplay, playlistVideos, addSuggestionToPlaylist])
 
 	const onVideoEnd = useCallback(() => {
 		setEnd(true)
@@ -76,7 +75,7 @@ function App() {
 		setEnd(false)
 	}, [])
 
-	const updateCurrent = useCallback((id: number) => {
+	const playVideo = useCallback((id: number) => {
 		playlist.current = id
 		setCurrent(id)
 	}, [])
@@ -91,23 +90,28 @@ function App() {
 		}
 	}, [continuation, videos])
 	return (
+		<playlistActionContext.Provider value={{addToPlaylist, playVideo}}>
+		<videoListenerContext.Provider value={{onVideoEnd, onVideoStart}}>
+		<videoContext.Provider value={{videos}}>
+		<autoplayContext.Provider value={{autoplay, setAutoplay}}>
 		<ThemeProvider theme={theme}>
-			<div className='background' style={{ height: '100vh', overflow: 'hidden' }}>
+			<div className='background'>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
 				{loading ?
 					<LinearProgress /> :
 					<VideoList
 						className={'video-list'}
 						spaceBottom
-						videos={videos}
-						setVideo={setVideo}
 						loadVideos={loadMoreSearchResult}/>}
-				<PlaylistRenderer
-				autoplay={autoplay}
-				setAutoplay={setAutoplay}
-				playVideo={updateCurrent} onAdd={setVideo} playlistVideos={playlistVideos} currentIndex={current} onVideoEnd={onVideoEnd} onVideoStart={onVideoStart}/>
+				{current !== null && <PlaylistRenderer
+					playlistVideos={playlistVideos}
+					currentIndex={current}/>}
 			</div>
 		</ThemeProvider>
+		</autoplayContext.Provider>
+		</videoContext.Provider>
+		</videoListenerContext.Provider>
+		</playlistActionContext.Provider>
 	);
 }
 

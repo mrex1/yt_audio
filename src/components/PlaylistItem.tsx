@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import {Video} from 'ytsr'
 import {SuggestVideo} from '../types'
 import { isSuggestVideo } from '../utils'
@@ -10,15 +10,13 @@ import './PlaylistItem.css'
 interface Props {
     video: Video | SuggestVideo;
     playing?: boolean;
-    setVideo: (videoId: string) => void;
+    playVideo: () => void;
 }
 
-const PlaylistItem = ({ video, setVideo, playing }: Props) => {
+const PlaylistItem = ({ video, playing, playVideo }: Props) => {
     const { title, author } = video
     const thumbnailUrl = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
-    const onVidClick = useCallback(() => {
-        setVideo(video.id)
-    }, [video, setVideo])
+
     return (
         <div className={clsx('play-list-item-container', {playing})}>
             {thumbnailUrl && <img
@@ -34,7 +32,7 @@ const PlaylistItem = ({ video, setVideo, playing }: Props) => {
                 {author?.name}
             </div>
             </div>
-            <IconButton className={clsx('icon', {playing})} onClick={onVidClick} color='secondary'>
+            <IconButton className={clsx('icon', {playing})} onClick={playVideo} color='secondary'>
                 <PlayCircleOutlineIcon/>
             </IconButton>
         </div>
