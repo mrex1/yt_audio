@@ -58,12 +58,11 @@ function App() {
 	useEffect(() => {
 		//for autoplaying next video
 		if (end && autoplay && playlist.playlistVideos.length > 0) {
-			playlist.next().then((next) => {
-				if (next !== undefined) {
-					setPlaylistVideos(playlist.playlistVideos)
-					setCurrent(next)
-				}
-			})
+			const next = playlist.next()
+			if (next !== undefined) {
+				setPlaylistVideos(playlist.playlistVideos)
+				setCurrent(next)
+			}
 		}
 	}, [end, autoplay, addToPlaylist])
 

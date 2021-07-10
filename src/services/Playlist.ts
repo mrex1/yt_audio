@@ -28,15 +28,10 @@ export class Playlist {
             return this.current
         }
     }
-    async next(): Promise<number | void> {
+    next(): number | void {
         if (this.current < this.videoIds.length - 1) {
             this.current += 1
             return this.current
-        }
-        const suggestion = await this.suggest(this.videoIds[this.current])
-        if (suggestion) {
-            this.add(suggestion)
-            return await this.next()
         }
     }
     // return a suggested video id that is not in the playlist
@@ -44,7 +39,8 @@ export class Playlist {
         const suggestions = await this.api.suggest(videoId)
         if (suggestions) {
             for (let suggestion of suggestions) {
-                if (this.videoIds.indexOf(suggestion.id) === -1) {
+                const isNotInPlaylist = this.videoIds.indexOf(suggestion.id) === -1
+                if (isNotInPlaylist) {
                     return suggestion.id
                 }
             }
