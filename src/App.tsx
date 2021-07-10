@@ -43,7 +43,7 @@ function App() {
 		setLoading(false)
 	}, [searchTerm])
 
-	const setVideo = useCallback((videoId: string) => {
+	const addToPlaylist = useCallback((videoId: string) => {
 		playlist.add(videoId)
 		setPlaylistVideos(playlist.playlistVideos)
 		if (end && autoplay) {
@@ -65,7 +65,7 @@ function App() {
 				}
 			})
 		}
-	}, [end, autoplay, setVideo])
+	}, [end, autoplay, addToPlaylist])
 
 	const onVideoEnd = useCallback(() => {
 		setEnd(true)
@@ -75,7 +75,7 @@ function App() {
 		setEnd(false)
 	}, [])
 
-	const updateCurrent = useCallback((id: number) => {
+	const playVideo = useCallback((id: number) => {
 		playlist.current = id
 		setCurrent(id)
 	}, [])
@@ -90,7 +90,7 @@ function App() {
 		}
 	}, [continuation, videos])
 	return (
-		<playlistActionContext.Provider value={{addToPlaylist: setVideo, playVideo: updateCurrent}}>
+		<playlistActionContext.Provider value={{addToPlaylist, playVideo}}>
 		<videoListenerContext.Provider value={{onVideoEnd, onVideoStart}}>
 		<videoContext.Provider value={{videos}}>
 		<autoplayContext.Provider value={{autoplay, setAutoplay}}>
