@@ -46,25 +46,17 @@ function App() {
 	const addToPlaylist = useCallback((videoId: string) => {
 		playlist.add(videoId)
 		setPlaylistVideos(playlist.playlistVideos)
-		if (end && autoplay) {
-			setEnd(false)
-			const next = playlist.setCurByVid(videoId)
-			if (next !== undefined) {
-				setCurrent(next)
-			}
-		}
-	}, [end, autoplay])
+	}, [])
 
 	useEffect(() => {
 		//for autoplaying next video
-		if (end && autoplay && playlist.playlistVideos.length > 0) {
+		if (end && autoplay && playlistVideos.length > 0) {
 			const next = playlist.next()
 			if (next !== undefined) {
-				setPlaylistVideos(playlist.playlistVideos)
 				setCurrent(next)
 			}
 		}
-	}, [end, autoplay, addToPlaylist])
+	}, [end, autoplay, playlistVideos])
 
 	const onVideoEnd = useCallback(() => {
 		setEnd(true)
