@@ -35,7 +35,8 @@ export class Playlist {
         }
     }
     // return a suggested video id that is not in the playlist
-    private async suggest(videoId: string): Promise<string | void> {
+    public async suggest(): Promise<string | void> {
+        const videoId = this.videoIds[this.current]
         const suggestions = await this.api.suggest(videoId)
         if (suggestions) {
             for (let suggestion of suggestions) {

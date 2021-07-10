@@ -48,15 +48,24 @@ function App() {
 		setPlaylistVideos(playlist.playlistVideos)
 	}, [])
 
+	const addSuggestionToPlaylist = useCallback(async () => {
+		const suggestion = await playlist.suggest()
+		if (suggestion) {
+			addToPlaylist(suggestion)
+		}
+	}, [addToPlaylist])
+
 	useEffect(() => {
 		//for autoplaying next video
 		if (end && autoplay && playlistVideos.length > 0) {
 			const next = playlist.next()
-			if (next !== undefined) {
+			if (next === undefined) {
+				addSuggestionToPlaylist()
+			} else {
 				setCurrent(next)
 			}
 		}
-	}, [end, autoplay, playlistVideos])
+	}, [end, autoplay, playlistVideos, addSuggestionToPlaylist])
 
 	const onVideoEnd = useCallback(() => {
 		setEnd(true)
