@@ -9,7 +9,7 @@ import { LinearProgress, ThemeProvider } from '@material-ui/core'
 import {Video, Continuation} from 'ytsr'
 import { useEffect } from 'react';
 import { SuggestVideo } from './types';
-import { videoContext, autoplayContext, videoListenerContext } from './context'
+import { videoContext, autoplayContext, videoListenerContext, playlistActionContext } from './context'
 
 
 function App() {
@@ -90,8 +90,9 @@ function App() {
 		}
 	}, [continuation, videos])
 	return (
+		<playlistActionContext.Provider value={{addToPlaylist: setVideo, playVideo: updateCurrent}}>
 		<videoListenerContext.Provider value={{onVideoEnd, onVideoStart}}>
-		<videoContext.Provider value={{videos, setVideo}}>
+		<videoContext.Provider value={{videos}}>
 		<autoplayContext.Provider value={{autoplay, setAutoplay}}>
 		<ThemeProvider theme={theme}>
 			<div className='background'>
@@ -103,7 +104,6 @@ function App() {
 						spaceBottom
 						loadVideos={loadMoreSearchResult}/>}
 				{current !== null && <PlaylistRenderer
-					playVideo={updateCurrent}
 					playlistVideos={playlistVideos}
 					currentIndex={current}/>}
 			</div>
@@ -111,6 +111,7 @@ function App() {
 		</autoplayContext.Provider>
 		</videoContext.Provider>
 		</videoListenerContext.Provider>
+		</playlistActionContext.Provider>
 	);
 }
 

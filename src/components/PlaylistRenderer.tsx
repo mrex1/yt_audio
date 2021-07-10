@@ -10,20 +10,19 @@ import {Video} from 'ytsr'
 import PlaylistItem from "./PlaylistItem"
 import {SuggestVideo} from '../types'
 import {api} from '../services'
-import {videoContext} from '../context'
+import {videoContext, playlistActionContext} from '../context'
 
 interface Props {
     playlistVideos: Array<Video | SuggestVideo>;
     currentIndex: number;
-    playVideo: (id: number) => void;
 }
 
-const PlaylistRenderer = ({playlistVideos, currentIndex, playVideo}: Props) => {
+const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
     const [on, setOn] = useState<boolean>(false)
     const [suggestions, setSuggestions] = useState<SuggestVideo[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const [currentVId, setCurrentVId] = useState<string | null>(null)
-    const {setVideo} = useContext(videoContext)
+    const {playVideo} = useContext(playlistActionContext)
 
     const toggleExpand = useCallback(() => {
         setOn(!on)
@@ -51,7 +50,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, playVideo}: Props) => {
     }, [currentIndex, playlistVideos])
 
     return (
-        <videoContext.Provider value={{videos: suggestions, setVideo}}>
+        <videoContext.Provider value={{videos: suggestions}}>
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
                 <div className='player-container'>
@@ -70,7 +69,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, playVideo}: Props) => {
                         <PlaylistItem
                             key={`playlist${id}`}
                             video={info}
-                            setVideo={() => playVideo(id)}
+                            playVideo={() => playVideo(id)}
                             playing={id === currentIndex}/>)}
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>

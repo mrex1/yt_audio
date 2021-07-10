@@ -2,17 +2,22 @@ import { createContext } from 'react'
 import { Video } from 'ytsr'
 import { SuggestVideo } from '../types'
 
-export const videoContext = createContext<{ videos: Array<Video | SuggestVideo>, setVideo: (videoId: string) => void }>({
-    videos: [],
-    setVideo: () => {}
+export const videoContext = createContext<{ videos: Array<Video | SuggestVideo> }>({
+    videos: []
 })
 
-export const autoplayContext = createContext<{autoplay: boolean, setAutoplay: (on: boolean) => void}>({
+export const playlistActionContext = createContext<{ playVideo: (index: number) => void, addToPlaylist: (videoId: string) => void }>({
+    playVideo: () => { },
+    addToPlaylist: () => { }
+
+})
+
+export const autoplayContext = createContext<{ autoplay: boolean, setAutoplay: (on: boolean) => void }>({
     autoplay: true,
-    setAutoplay: () => {}
+    setAutoplay: () => { }
 })
 
-export const videoListenerContext = createContext<{onVideoEnd: () => void, onVideoStart: () => void}>({
-    onVideoEnd: () => {},
-    onVideoStart: () => {},
+export const videoListenerContext = createContext<{ onVideoEnd: () => void, onVideoStart: () => void }>({
+    onVideoEnd: () => { },
+    onVideoStart: () => { },
 })
