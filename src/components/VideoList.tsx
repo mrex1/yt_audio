@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useContext } from 'react'
 import VideoListItem from './VideoListItem'
 import { LinearProgress } from '@material-ui/core'
-import { playlistActionContext, videoContext } from '../context'
+import { videoContext } from '../context'
 
 interface Props{
     loadVideos?: () => Promise<void>;
@@ -12,7 +12,6 @@ interface Props{
 const VideoList = ({className, spaceBottom, loadVideos}: Props) => {
     const [loading, setLoading] = useState<boolean>(false)
     const {videos} = useContext(videoContext)
-    const {addToPlaylist} = useContext(playlistActionContext)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
         const d = e.currentTarget
         if (loadVideos && !loading && d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
@@ -25,7 +24,7 @@ const VideoList = ({className, spaceBottom, loadVideos}: Props) => {
     <div 
     className={className}
     onScroll={onScroll}>
-        {videos.map(v => <VideoListItem video={v} key={v.id} setVideo={addToPlaylist}/>)}
+        {videos.map(v => <VideoListItem video={v} key={v.id}/>)}
         {loading && <LinearProgress/>}
         {spaceBottom && <div style={{height: 100}}/>}
     </div>

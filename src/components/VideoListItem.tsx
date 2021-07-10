@@ -1,23 +1,24 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useContext } from 'react'
 import {Video} from 'ytsr'
 import {SuggestVideo} from '../types'
 import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
 import {api} from '../services'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import {playlistActionContext} from '../context'
 import './VideoListItem.css'
 
 interface Props {
     video: Video | SuggestVideo;
-    setVideo: (videoId: string) => void;
 }
 
-const VideoListItem = ({ video, setVideo }: Props) => {
+const VideoListItem = ({ video }: Props) => {
     const {title, id} = video
     const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
+    const {addToPlaylist} = useContext(playlistActionContext)
     const onVidClick = useCallback(() => {
-        setVideo(video.id)
-    }, [video, setVideo])
+        addToPlaylist(video.id)
+    }, [video, addToPlaylist])
     return (
         <div className='video-list-item-container'>
             {thumbnail && <img
