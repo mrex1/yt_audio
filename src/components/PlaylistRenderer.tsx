@@ -51,7 +51,6 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, playVideo}: Props) => {
     }, [currentIndex, playlistVideos])
 
     return (
-        currentIndex !== -1 ?
         <videoContext.Provider value={{videos: suggestions, setVideo}}>
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
@@ -80,7 +79,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex, playVideo}: Props) => {
             }
             </div>
         </div>
-        </videoContext.Provider> : null
+        </videoContext.Provider>
     )
 }
 

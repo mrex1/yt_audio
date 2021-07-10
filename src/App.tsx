@@ -19,7 +19,7 @@ function App() {
 	const [loading, setLoading] = useState<boolean>(false)
 	const [playlistVideos, setPlaylistVideos] = useState<Array<Video | SuggestVideo>>([])
 	const [continuation, setContinuation] = useState<Continuation | null>(null)
-	const [current, setCurrent] = useState<number>(-1)
+	const [current, setCurrent] = useState<number | null>(null)
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
 	const onSearchTermChange = useCallback((evt) => {
@@ -102,10 +102,10 @@ function App() {
 						className={'video-list'}
 						spaceBottom
 						loadVideos={loadMoreSearchResult}/>}
-				<PlaylistRenderer
+				{current !== null && <PlaylistRenderer
 					playVideo={updateCurrent}
 					playlistVideos={playlistVideos}
-					currentIndex={current}/>
+					currentIndex={current}/>}
 			</div>
 		</ThemeProvider>
 		</autoplayContext.Provider>
