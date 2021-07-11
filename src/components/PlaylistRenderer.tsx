@@ -7,9 +7,10 @@ import Down from '@material-ui/icons/ExpandMore'
 import Player from './Player'
 import VideoList from './VideoList'
 import {Video} from 'ytsr'
-import PlaylistItem from "./PlaylistItem"
+import VideoListItem from "./VideoListItem"
 import {SuggestVideo} from '../types'
 import {api} from '../services'
+import { openLink } from "../utils"
 import {videoContext, playlistActionContext} from '../context'
 
 interface Props {
@@ -39,6 +40,11 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
         setLoading(false)
     }, [])
 
+    const onLaunchClick = useCallback((videoId: string) => {
+        const youtubeLink = api.getYoutubeLink(videoId)
+        openLink(youtubeLink)
+    }, [])
+
     useEffect(() => {
         if (currentVId) {
             getSuggestions(currentVId)
@@ -66,10 +72,11 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
             <div className={clsx('list')}>
                 {playlistVideos
                     .map((info, id) =>
-                        <PlaylistItem
+                        <VideoListItem
                             key={`playlist${id}`}
                             video={info}
-                            playVideo={() => playVideo(id)}
+                            onPlayClick={() => playVideo(id)}
+                            onLaunchClick={onLaunchClick}
                             playing={id === currentIndex}/>)}
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>

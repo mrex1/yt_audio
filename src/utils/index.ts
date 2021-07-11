@@ -24,3 +24,11 @@ export const durationToSeconds = (duration: string | null): number => {
 export const isSuggestVideo = (obj: any): obj is SuggestVideo => {
     return obj.thumbnail
 }
+
+export const openLink = (link: string) => {
+    const a = document.createElement('a')
+    a.href = link
+    a.target = '_blank'
+    a.rel = 'no-referrer'
+    a.click()
+}

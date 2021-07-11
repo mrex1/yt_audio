@@ -80,6 +80,13 @@ function App() {
 		setCurrent(id)
 	}, [])
 
+	const addToPlaylistThenPlay = useCallback((videoId: string) => {
+		addToPlaylist(videoId)
+		playlist.setCurByVid(videoId)
+		setCurrent(playlist.current)
+		setEnd(false)
+	}, [addToPlaylist])
+
 	const loadMoreSearchResult = useCallback(async () => {
 		if (continuation === null) return
 		const result = await api.searchContinue(continuation)
@@ -90,7 +97,7 @@ function App() {
 		}
 	}, [continuation, videos])
 	return (
-		<playlistActionContext.Provider value={{addToPlaylist, playVideo}}>
+		<playlistActionContext.Provider value={{addToPlaylist, playVideo, addToPlaylistThenPlay}}>
 		<videoListenerContext.Provider value={{onVideoEnd, onVideoStart}}>
 		<videoContext.Provider value={{videos}}>
 		<autoplayContext.Provider value={{autoplay, setAutoplay}}>
