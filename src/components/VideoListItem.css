@@ -4,6 +4,10 @@
     margin: 15px 5px 15px 5px;
 }
 
+.video-list-item-container.playing {
+    background-color: rgba(255, 166, 0, 0.2);
+}
+
 .video-list-item-row {
     display: flex;
     flex-direction: row;

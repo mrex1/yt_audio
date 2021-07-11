@@ -1,41 +1,46 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
 import {Video} from 'ytsr'
 import {SuggestVideo} from '../types'
 import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
-import {api} from '../services'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import LaunchIcon from '@material-ui/icons/Launch'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
-import {playlistActionContext} from '../context'
+import clsx from 'clsx'
 import './VideoListItem.css'
 
 interface Props {
     video: Video | SuggestVideo;
+    playing?: boolean;
+    onAddClick?: (vid: string) => void;
+    onPlayClick?: (vid: string) => void;
+    onLaunchClick?: (vid: string) => void;
 }
 
-const VideoListItem = ({ video }: Props) => {
+const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick }: Props) => {
     const {title, author} = video
     const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
-    const {addToPlaylist, addToPlaylistThenPlay} = useContext(playlistActionContext)
 
-    const onVidClick = useCallback(() => {
-        addToPlaylist(video.id)
-    }, [video, addToPlaylist])
+    const onAddClickHandler = useCallback(() => {
+        if (onAddClick) {
+            onAddClick(video.id)
+        }
+    }, [video, onAddClick])
 
-    const onLaunchClick = useCallback(() => {
-        const a = document.createElement('a')
-        a.href = api.getYoutubeLink(video.id)
-        a.target = '_blank'
-        a.rel = 'no-referrer'
-        a.click()
-    }, [video])
+    const onLaunchClickHandler = useCallback(() => {
+        if (onLaunchClick) {
+            onLaunchClick(video.id)
+        }
+    }, [video, onLaunchClick])
 
-    const onPlayClick = useCallback(() => {
-        addToPlaylistThenPlay(video.id)
-    }, [addToPlaylistThenPlay, video])
+    const onPlayClickHandler = useCallback(() => {
+        if (onPlayClick) {
+            onPlayClick(video.id)
+        }
+    }, [video, onPlayClick])
+
     return (
-        <div className='video-list-item-container'>
+        <div className={clsx('video-list-item-container', {playing})}>
             {thumbnail && <img
                 src={thumbnail}
                 className='video-list-item-thumbnail'
@@ -50,15 +55,15 @@ const VideoListItem = ({ video }: Props) => {
                     {author?.name}
                 </div>
                 <div className='video-list-item-row tools'>
-                    <IconButton onClick={onPlayClick} color='secondary'>
+                    {onPlayClick && <IconButton onClick={onPlayClickHandler} color='secondary'>
                         <PlayCircleOutlineIcon/>
-                    </IconButton>
-                    <IconButton onClick={onVidClick} color='secondary'>
+                    </IconButton>}
+                    {onAddClick && <IconButton onClick={onAddClickHandler} color='secondary'>
                         <AddCircleOutlineIcon/>
-                    </IconButton>
-                    <IconButton onClick={onLaunchClick} color='secondary'>
+                    </IconButton>}
+                    {onLaunchClick && <IconButton onClick={onLaunchClickHandler} color='secondary'>
                         <LaunchIcon/>
-                    </IconButton>
+                    </IconButton>}
                 </div>
             </div>
         </div>

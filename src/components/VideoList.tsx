@@ -1,7 +1,9 @@
 import React, { useCallback, useState, useContext } from 'react'
 import VideoListItem from './VideoListItem'
 import { LinearProgress } from '@material-ui/core'
-import { videoContext } from '../context'
+import { api } from '../services'
+import { openLink } from '../utils'
+import { videoContext, playlistActionContext } from '../context'
 
 interface Props{
     loadVideos?: () => Promise<void>;
@@ -12,6 +14,7 @@ interface Props{
 const VideoList = ({className, spaceBottom, loadVideos}: Props) => {
     const [loading, setLoading] = useState<boolean>(false)
     const {videos} = useContext(videoContext)
+    const {addToPlaylist, addToPlaylistThenPlay} = useContext(playlistActionContext)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
         const d = e.currentTarget
         if (loadVideos && !loading && d.scrollHeight - d.offsetHeight - d.scrollTop < 2) {
@@ -19,12 +22,31 @@ const VideoList = ({className, spaceBottom, loadVideos}: Props) => {
             loadVideos().then(() => setLoading(false))
         }
     }, [loadVideos, loading])
+
+    const onAddClick = useCallback((videoId: string) => {
+        addToPlaylist(videoId)
+    }, [addToPlaylist])
+
+    const onLaunchClick = useCallback((videoId: string) => {
+        const youtubeLink = api.getYoutubeLink(videoId)
+        openLink(youtubeLink)
+    }, [])
+
+    const onPlayClick = useCallback((videoId: string) => {
+        addToPlaylistThenPlay(videoId)
+    }, [addToPlaylistThenPlay])
     
     return (
     <div 
     className={className}
     onScroll={onScroll}>
-        {videos.map(v => <VideoListItem video={v} key={v.id}/>)}
+        {videos.map(v =>
+            <VideoListItem
+                video={v}
+                key={v.id}
+                onAddClick={onAddClick}
+                onPlayClick={onPlayClick}
+                onLaunchClick={onLaunchClick}/>)}
         {loading && <LinearProgress/>}
         {spaceBottom && <div style={{height: 100}}/>}
     </div>
