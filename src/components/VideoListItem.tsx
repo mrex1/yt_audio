@@ -17,7 +17,7 @@ interface Props {
 const VideoListItem = ({ video }: Props) => {
     const {title, author} = video
     const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
-    const {addToPlaylist} = useContext(playlistActionContext)
+    const {addToPlaylist, addToPlaylistThenPlay} = useContext(playlistActionContext)
 
     const onVidClick = useCallback(() => {
         addToPlaylist(video.id)
@@ -32,8 +32,8 @@ const VideoListItem = ({ video }: Props) => {
     }, [video])
 
     const onPlayClick = useCallback(() => {
-
-    }, [])
+        addToPlaylistThenPlay(video.id)
+    }, [addToPlaylistThenPlay, video])
     return (
         <div className='video-list-item-container'>
             {thumbnail && <img
