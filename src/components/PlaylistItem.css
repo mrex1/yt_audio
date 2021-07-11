@@ -4,6 +4,16 @@
     margin: 10px 5px 10px 5px;
 }
 
+.play-list-item-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.play-list-item-row.tools {
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .play-list-item-container.playing {
     background-color: rgba(255, 166, 0, 0.2);
 }
@@ -13,7 +23,7 @@
 }
 
 .play-list-item-container img {
-    width: 150px;
+    width: 180px;
     margin-right: 10px;
     object-fit: contain;
 }

@@ -36,31 +36,29 @@ const VideoListItem = ({ video }: Props) => {
     }, [])
     return (
         <div className='video-list-item-container'>
-            <div className='video-list-item-row'>
-                {thumbnail && <img
-                    src={thumbnail}
-                    className='thumbnail'
-                    alt='thumbnail'
-                    loading='lazy'
-                />}
-                <div className='content'>
-                    <div className='title single-line'>
-                        {title}
-                    </div>
-                    <div className='video-list-item-row subtitle'>
-                        <span className='single-line'>{author?.name}</span>
-                    </div>
-                    <div className='video-list-item-row tools'>
-                        <IconButton onClick={onPlayClick} color='secondary'>
-                            <PlayCircleOutlineIcon/>
-                        </IconButton>
-                        <IconButton onClick={onVidClick} color='secondary'>
-                            <AddCircleOutlineIcon/>
-                        </IconButton>
-                        <IconButton onClick={onLaunchClick} color='secondary'>
-                            <LaunchIcon/>
-                        </IconButton>
-                    </div>
+            {thumbnail && <img
+                src={thumbnail}
+                className='video-list-item-thumbnail'
+                alt='thumbnail'
+                loading='lazy'
+            />}
+            <div className='video-list-item-content'>
+                <div className='video-list-item-title single-line'>
+                    {title}
+                </div>
+                <div className='video-list-item-subtitle single-line'>
+                    {author?.name}
+                </div>
+                <div className='video-list-item-row tools'>
+                    <IconButton onClick={onPlayClick} color='secondary'>
+                        <PlayCircleOutlineIcon/>
+                    </IconButton>
+                    <IconButton onClick={onVidClick} color='secondary'>
+                        <AddCircleOutlineIcon/>
+                    </IconButton>
+                    <IconButton onClick={onLaunchClick} color='secondary'>
+                        <LaunchIcon/>
+                    </IconButton>
                 </div>
             </div>
         </div>

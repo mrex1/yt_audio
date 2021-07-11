@@ -1,6 +1,6 @@
 .video-list-item-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin: 15px 5px 15px 5px;
 }
 
@@ -14,21 +14,21 @@
     align-items: center;
 }
 
-.video-list-item-row .thumbnail {
+.video-list-item-thumbnail {
     width: 180px;
     margin-right: 10px;
     object-fit: contain;
 }
 
-.video-list-item-row .content {
+.video-list-item-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     overflow: hidden;
     flex: 1;
 }
 
-.video-list-item-row .title {
+.video-list-item-title {
     font-size: 16px;
     color: white;
     margin-bottom: 5px;
@@ -41,7 +41,7 @@
     text-overflow: ellipsis;
 }
 
-.video-list-item-row .subtitle {
+.video-list-item-subtitle {
     font-size: 13px;
     color: silver;
     text-decoration: none;
