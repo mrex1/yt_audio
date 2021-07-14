@@ -1,2 +1,2 @@
 # yt_audio
-Search and stream audio from youtube
+A [website](https://mrex1.github.io/yt_audio/) for you to search, stream and download audio from YouTube
