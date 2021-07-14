@@ -1,6 +1,6 @@
 {
-  "homepage": "http://mrex1.github.io/youtube_dl_web",
-  "name": "youtube_dl_web",
+  "homepage": "http://mrex1.github.io/yt_audio",
+  "name": "yt_audio",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

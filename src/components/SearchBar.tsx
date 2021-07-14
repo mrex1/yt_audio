@@ -64,7 +64,7 @@ const SearchBar = ({ onChange, onSubmit }: Props) => {
                         }/>
                 </Toolbar> : 
                 <Toolbar>
-                    <Typography style={{flex: 1}}>ListenTube</Typography>
+                    <Typography style={{flex: 1}}>YT Audio</Typography>
                     <IconButton color='secondary' onClick={handleSearch}>
                         <SearchIcon/>
                     </IconButton>
