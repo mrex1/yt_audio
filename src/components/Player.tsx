@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react'
-import { Slider, IconButton, Typography, Tooltip, CircularProgress } from '@material-ui/core'
+import { Slider, IconButton, Typography, Tooltip, CircularProgress, Snackbar, Button } from '@material-ui/core'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled'
 import { formatTime, durationToSeconds } from '../utils'
@@ -22,6 +22,7 @@ const Player = ({ videoDetails }: Props) => {
     const [curVId, setCurVId] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState<number>(0)
+    const [errorMessage, setErrorMessage] = useState<string>('')
     const {autoplay, setAutoplay} = useContext(autoplayContext)
     const {onVideoEnd, onVideoStart} = useContext(videoListenerContext)
 
@@ -35,6 +36,7 @@ const Player = ({ videoDetails }: Props) => {
     useEffect(() => {
         audioManager.audio.onplay = () => {
             setPlaying(true)
+            setErrorMessage('')
             if (onVideoStart) {
                 onVideoStart()
             }
@@ -47,14 +49,31 @@ const Player = ({ videoDetails }: Props) => {
         }
     }, [onVideoStart, onVideoEnd])
 
+    const playErrorHandler = useCallback((err) => {
+        const isAborted = err.message.indexOf("aborted by the user agent") !== -1
+        if (!isAborted) {
+            setLoading(false)
+            setErrorMessage("Failed to play the video")
+        }
+    }, [])
+
+    const retry = useCallback(() => {
+        audioManager.retry()
+        audioManager.audio.play().catch(playErrorHandler)
+    }, [playErrorHandler])
+
+    const handleClose = useCallback(() => {
+        setErrorMessage('')
+    }, [])
+
     const setupForNewVideo = useCallback((videoDetails: Video | SuggestVideo) => {
         setCurVId(videoDetails.id)
         audioManager.updateAudio(videoDetails.id)
         setCurrentTime(0)
         if (autoplay) {
-            audioManager.audio.play().catch(console.log)
+            audioManager.audio.play().catch(playErrorHandler)
         }
-    }, [autoplay])
+    }, [autoplay, playErrorHandler])
 
     useEffect(() => {
         if (curVId !== videoDetails.id) {
@@ -108,6 +127,18 @@ const Player = ({ videoDetails }: Props) => {
                     <Typography variant="subtitle2" style={{ color: 'silver' }} noWrap>{videoDetails.author?.name}</Typography>
                 </div>
             </div>
+            <Snackbar
+                open={errorMessage !== ''}
+                autoHideDuration={10000}
+                onClose={handleClose}
+                message={errorMessage}
+                color="secondary"
+                action={
+                    <Button color="secondary" size="small" onClick={retry}>
+                        Retry
+                    </Button>
+                }
+            />
         </div>
     )
 }
