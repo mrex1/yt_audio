@@ -18,6 +18,12 @@ export class AudioManager {
         const url = this.api.getAudioURL(vid)
         this.audio.src = url
     }
+
+    public retry(): void {
+        const originalSrc = this.audio.src
+        this.audio.src = ''
+        this.audio.src = originalSrc
+    }
 }
 
 export const audioManager = new AudioManager(api);
