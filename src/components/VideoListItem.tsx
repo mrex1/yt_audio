@@ -55,7 +55,7 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
                     {author?.name}
                 </div>
                 <div className='video-list-item-row tools'>
-                    {onPlayClick && <IconButton onClick={onPlayClickHandler} color='secondary'>
+                    {!playing && onPlayClick && <IconButton onClick={onPlayClickHandler} color='secondary'>
                         <PlayCircleOutlineIcon/>
                     </IconButton>}
                     {onAddClick && <IconButton onClick={onAddClickHandler} color='secondary'>
