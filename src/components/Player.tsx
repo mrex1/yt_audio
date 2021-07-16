@@ -129,10 +129,10 @@ const Player = ({ videoDetails }: Props) => {
             </div>
             <Snackbar
                 open={errorMessage !== ''}
-                autoHideDuration={10000}
                 onClose={handleClose}
                 message={errorMessage}
                 color="secondary"
+                ClickAwayListenerProps={{onClickAway: () => {}}}
                 action={
                     <Button color="secondary" size="small" onClick={retry}>
                         Retry
