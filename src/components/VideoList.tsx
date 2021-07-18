@@ -11,9 +11,10 @@ interface Props{
     className?: string;
     spaceBottom?: boolean;
     videos: Array<Video>;
+    children?: JSX.Element;
 }
 
-const VideoList = ({className, spaceBottom, loadVideos, videos}: Props) => {
+const VideoList = ({className, spaceBottom, loadVideos, videos, children}: Props) => {
     const [loading, setLoading] = useState<boolean>(false)
     const {addToPlaylist, addToPlaylistThenPlay} = useContext(playlistActionContext)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
@@ -41,6 +42,7 @@ const VideoList = ({className, spaceBottom, loadVideos, videos}: Props) => {
     <div 
     className={className}
     onScroll={onScroll}>
+        {children}
         {videos.map(v =>
             <VideoListItem
                 video={v}

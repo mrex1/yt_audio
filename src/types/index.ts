@@ -1,5 +1,5 @@
 import {Video as SearchVideo, Image, Continuation as SearchContinuation} from 'ytsr'
-import {Item as YTPlaylistItem, Continuation as YTPlaylistContinuation} from 'ytpl'
+import {Item as YTPlaylistItem, Continuation as YTPlaylistContinuation, Result as YTPlaylistResult} from 'ytpl'
 
 export interface VideoCache {
     [videoId: string]: Video
@@ -26,4 +26,6 @@ export type Video = SearchVideo | YTPlaylistItem | SuggestVideo
 export type VideoLoader = () => Promise<{
     videos: Array<Video>,
     continuation?: SearchContinuation | YTPlaylistContinuation | null,
-    channel?: string}>
+    channel?: ChannelInfo}>
+
+export type ChannelInfo = YTPlaylistResult['author']

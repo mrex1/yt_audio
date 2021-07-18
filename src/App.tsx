@@ -5,14 +5,15 @@ import SearchBar from './components/SearchBar'
 import PlaylistRenderer from './components/PlaylistRenderer'
 import { theme } from './constants'
 import { api, playlist } from './services'
-import { LinearProgress, ThemeProvider, Typography } from '@material-ui/core'
+import { LinearProgress, ThemeProvider } from '@material-ui/core'
 import { Continuation as SearchContinuation} from 'ytsr'
 import { Continuation as YTPlaylistContinuation } from 'ytpl'
-import { Video, VideoLoader } from './types';
+import { ChannelInfo, Video, VideoLoader } from './types';
 import { mainScreenVideoContext, autoplayContext, videoListenerContext, playlistActionContext } from './context'
+import ChannelHeader from './components/ChannelHeader';
 
 function useVideos() {
-	const [channel, setChannel] = useState<string | undefined>()
+	const [channel, setChannel] = useState<ChannelInfo | undefined>()
 	const [videos, setVideos] = useState<Array<Video>>([])
 	const [continuation, setContinuation] = useState<SearchContinuation | YTPlaylistContinuation | undefined | null>()
 	const [loading, setLoading] = useState<boolean>(false)
@@ -134,14 +135,15 @@ function App() {
 		<ThemeProvider theme={theme}>
 			<div className='background'>
 				<SearchBar onChange={onSearchTermChange} onSubmit={onSearch} />
-				{channel && <Typography variant='h3' component='h3' color='secondary'>{channel}</Typography>}
 				{loading ?
 					<LinearProgress /> :
 					<VideoList
 						className={'video-list'}
 						spaceBottom
 						videos={videos}
-						loadVideos={loadMoreVideos}/>}
+						loadVideos={loadMoreVideos}>
+							{channel && <ChannelHeader channelInfo={channel}/>}
+					</VideoList>}
 				{current !== null && <PlaylistRenderer
 					playlistVideos={playlistVideos}
 					currentIndex={current}/>}

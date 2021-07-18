@@ -45,7 +45,7 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
         const result = await api.getYTPlaylist(channelID)
         const videos = result ? result.items : []
         const continuation = result?.continuation
-        const channel = result?.author.name
+        const channel = result?.author
         return {videos, continuation, channel}
     }, [])
 
