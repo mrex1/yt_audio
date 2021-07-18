@@ -3,17 +3,18 @@ import VideoListItem from './VideoListItem'
 import { LinearProgress } from '@material-ui/core'
 import { api } from '../services'
 import { openLink } from '../utils'
-import { videoContext, playlistActionContext } from '../context'
+import { playlistActionContext } from '../context'
+import { Video } from '../types'
 
 interface Props{
     loadVideos?: () => Promise<void>;
     className?: string;
     spaceBottom?: boolean;
+    videos: Array<Video>;
 }
 
-const VideoList = ({className, spaceBottom, loadVideos}: Props) => {
+const VideoList = ({className, spaceBottom, loadVideos, videos}: Props) => {
     const [loading, setLoading] = useState<boolean>(false)
-    const {videos} = useContext(videoContext)
     const {addToPlaylist, addToPlaylistThenPlay} = useContext(playlistActionContext)
     const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
         const d = e.currentTarget

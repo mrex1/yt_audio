@@ -10,7 +10,7 @@ import VideoListItem from "./VideoListItem"
 import {Video, SuggestVideo} from '../types'
 import {api} from '../services'
 import { openLink } from "../utils"
-import {videoContext, playlistActionContext} from '../context'
+import {playlistActionContext} from '../context'
 
 interface Props {
     playlistVideos: Array<Video>;
@@ -55,7 +55,6 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
     }, [currentIndex, playlistVideos])
 
     return (
-        <videoContext.Provider value={{videos: suggestions}}>
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
                 <div className='player-container'>
@@ -80,11 +79,11 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {loading ?
-                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> : <VideoList className={clsx('list')}/>
+                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> :
+                <VideoList videos={suggestions} className={clsx('list')}/>
             }
             </div>
         </div>
-        </videoContext.Provider>
     )
 }
 

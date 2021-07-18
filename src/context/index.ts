@@ -1,11 +1,10 @@
 import { createContext } from 'react'
 import { Video } from '../types'
 
-export const videoContext = createContext<{
-    videos: Array<Video>,
-    setVideos?: (video: Array<Video>) => void
+export const mainScreenVideoContext = createContext<{
+    setVideos: (video: Array<Video>) => void
 }>({
-    videos: []
+    setVideos: () => {}
 })
 
 export const playlistActionContext = createContext<{
