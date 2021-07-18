@@ -6,15 +6,14 @@ import Up from '@material-ui/icons/ExpandLess'
 import Down from '@material-ui/icons/ExpandMore'
 import Player from './Player'
 import VideoList from './VideoList'
-import {Video} from 'ytsr'
 import VideoListItem from "./VideoListItem"
-import {SuggestVideo} from '../types'
+import {Video, SuggestVideo} from '../types'
 import {api} from '../services'
 import { openLink } from "../utils"
 import {videoContext, playlistActionContext} from '../context'
 
 interface Props {
-    playlistVideos: Array<Video | SuggestVideo>;
+    playlistVideos: Array<Video>;
     currentIndex: number;
 }
 

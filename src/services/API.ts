@@ -1,6 +1,6 @@
 import {URL} from '../constants'
-import { VideoCache, SuggestVideo, SuggestionsCache } from '../types'
-import { Result as SearchResult, Video, Continuation, ContinueResult } from 'ytsr'
+import { VideoCache, SuggestVideo, SuggestionsCache, Video } from '../types'
+import { Result as SearchResult, Continuation, ContinueResult } from 'ytsr'
 import { Result as PlaylistResult, Continuation as PlaylistContinuation, ContinueResult as PlaylistContinueResult} from 'ytpl'
 
 export class API {
@@ -15,7 +15,7 @@ export class API {
     public getYoutubeLink(videoId: string): string {
         return `https://youtu.be/${videoId}`
     }
-    public getInfo(videoId: string): Video | SuggestVideo {
+    public getInfo(videoId: string): Video {
         return this.cache[videoId]
     }
     public getAudioURL(videoId: string): string {

@@ -1,7 +1,8 @@
-import {Video, Image} from 'ytsr'
+import {Video as SearchVideo, Image} from 'ytsr'
+import {Item as YTPlaylistItem} from 'ytpl'
 
 export interface VideoCache {
-    [videoId: string]: Video | SuggestVideo
+    [videoId: string]: Video
 }
 
 export interface SuggestionsCache {
@@ -19,3 +20,5 @@ export interface SuggestVideo {
     id: string,
     duration: string
 }
+
+export type Video = SearchVideo | YTPlaylistItem | SuggestVideo

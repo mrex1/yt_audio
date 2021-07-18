@@ -1,9 +1,12 @@
 import { createContext } from 'react'
-import { Video } from 'ytsr'
-import { SuggestVideo } from '../types'
+import { Video } from '../types'
 
-export const videoContext = createContext<{ videos: Array<Video | SuggestVideo> }>({
-    videos: []
+export const videoContext = createContext<{
+    videos: Array<Video>,
+    setVideos?: (video: Video) => void
+}>({
+    videos: [],
+    setVideos: () => {}
 })
 
 export const playlistActionContext = createContext<{

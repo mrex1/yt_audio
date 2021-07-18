@@ -7,14 +7,13 @@ import { api, audioManager } from '../services'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import DownloadIcon from '@material-ui/icons/GetApp'
-import { Video } from 'ytsr'
-import { SuggestVideo } from '../types'
+import { Video } from '../types'
 import { autoplayContext, videoListenerContext } from '../context'
 import './Player.css'
 
 
 interface Props {
-    videoDetails: Video | SuggestVideo;
+    videoDetails: Video;
 }
 
 const Player = ({ videoDetails }: Props) => {
@@ -66,7 +65,7 @@ const Player = ({ videoDetails }: Props) => {
         setErrorMessage('')
     }, [])
 
-    const setupForNewVideo = useCallback((videoDetails: Video | SuggestVideo) => {
+    const setupForNewVideo = useCallback((videoDetails: Video) => {
         setCurVId(videoDetails.id)
         audioManager.updateAudio(videoDetails.id)
         setCurrentTime(0)

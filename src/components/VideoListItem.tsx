@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import {Video} from 'ytsr'
-import {SuggestVideo} from '../types'
+import { Video } from '../types'
 import { isSuggestVideo } from '../utils'
 import {IconButton} from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
@@ -10,7 +9,7 @@ import clsx from 'clsx'
 import './VideoListItem.css'
 
 interface Props {
-    video: Video | SuggestVideo;
+    video: Video;
     playing?: boolean;
     onAddClick?: (vid: string) => void;
     onPlayClick?: (vid: string) => void;

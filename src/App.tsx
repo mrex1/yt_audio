@@ -6,9 +6,9 @@ import PlaylistRenderer from './components/PlaylistRenderer'
 import { theme } from './constants'
 import { api, playlist } from './services'
 import { LinearProgress, ThemeProvider } from '@material-ui/core'
-import {Video, Continuation} from 'ytsr'
+import { Continuation} from 'ytsr'
 import { useEffect } from 'react';
-import { SuggestVideo } from './types';
+import { Video } from './types';
 import { videoContext, autoplayContext, videoListenerContext, playlistActionContext } from './context'
 
 
@@ -17,7 +17,7 @@ function App() {
 	const [end, setEnd] = useState<boolean>(true)
 	const [autoplay, setAutoplay] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(false)
-	const [playlistVideos, setPlaylistVideos] = useState<Array<Video | SuggestVideo>>([])
+	const [playlistVideos, setPlaylistVideos] = useState<Array<Video>>([])
 	const [continuation, setContinuation] = useState<Continuation | null>(null)
 	const [current, setCurrent] = useState<number | null>(null)
 	const [searchTerm, setSearchTerm] = useState<string>('')
