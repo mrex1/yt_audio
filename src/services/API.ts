@@ -1,6 +1,7 @@
 import {URL} from '../constants'
 import { VideoCache, SuggestVideo, SuggestionsCache } from '../types'
 import { Result as SearchResult, Video, Continuation, ContinueResult } from 'ytsr'
+import { Result as PlaylistResult, Continuation as PlaylistContinuation, ContinueResult as PlaylistContinueResult} from 'ytpl'
 
 export class API {
     private url: string
@@ -74,6 +75,30 @@ export class API {
                     this.cache[i.id] = i
                 }
             })
+            return result
+        } catch (err) {
+            return null
+        }
+    }
+    public async getPlaylistOrChannel(id: string): Promise<PlaylistResult | null> {
+        try {
+            const res = await fetch(`${URL}/playlist?pid=${id}`)
+            const playlist: PlaylistResult = await res.json()
+            return playlist
+        } catch (err) {
+            return null
+        }
+    }
+    public async playlistContinue(continuation: PlaylistContinuation): Promise<PlaylistContinueResult | null> {
+        try {
+            const res = await fetch(`${URL}/playlist`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(continuation)
+            })
+            const result: PlaylistContinueResult = await res.json()
             return result
         } catch (err) {
             return null

@@ -1,6 +1,6 @@
 import {createMuiTheme} from '@material-ui/core'
 
-export const URL = 'https://zb3ad4304-gtw.qovery.io'
+export const URL = 'http://localhost:3001'
 
 export const theme = createMuiTheme({
     palette: {
