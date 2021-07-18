@@ -1,10 +1,10 @@
 import { createContext } from 'react'
-import { Video } from '../types'
+import { VideoLoader } from '../types'
 
 export const mainScreenVideoContext = createContext<{
-    setVideos: (video: Array<Video>) => void
+    setVideosWithLoading: (loadVideos: VideoLoader) => Promise<void>
 }>({
-    setVideos: () => {}
+    setVideosWithLoading: async () => {}
 })
 
 export const playlistActionContext = createContext<{

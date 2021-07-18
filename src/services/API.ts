@@ -84,6 +84,10 @@ export class API {
         try {
             const res = await fetch(`${URL}/playlist?pid=${id}`)
             const playlist: PlaylistResult = await res.json()
+            playlist.items.forEach(item => {
+                if (item.id in this.cache) return
+                this.cache[item.id] = item
+            })
             return playlist
         } catch (err) {
             return null
@@ -98,8 +102,12 @@ export class API {
                 },
                 body: JSON.stringify(continuation)
             })
-            const result: PlaylistContinueResult = await res.json()
-            return result
+            const playlist: PlaylistContinueResult = await res.json()
+            playlist.items.forEach(item => {
+                if (item.id in this.cache) return
+                this.cache[item.id] = item
+            })
+            return playlist
         } catch (err) {
             return null
         }
