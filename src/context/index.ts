@@ -3,10 +3,9 @@ import { Video } from '../types'
 
 export const videoContext = createContext<{
     videos: Array<Video>,
-    setVideos?: (video: Video) => void
+    setVideos?: (video: Array<Video>) => void
 }>({
-    videos: [],
-    setVideos: () => {}
+    videos: []
 })
 
 export const playlistActionContext = createContext<{
