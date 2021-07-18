@@ -1,14 +1,22 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { Continuation as SearchContinuation} from 'ytsr'
 import { Continuation as YTPlaylistContinuation } from 'ytpl'
 import { ChannelInfo, Video, VideoLoader } from '../types'
 import { api } from '../services'
+import { sleep } from '../utils'
+
+const NUMBER_OF_VIDEO_TO_LOAD = 15
 
 export function useVideos() {
 	const [channel, setChannel] = useState<ChannelInfo | undefined>()
 	const [videos, setVideos] = useState<Array<Video>>([])
-	const [continuation, setContinuation] = useState<SearchContinuation | YTPlaylistContinuation | undefined | null>()
+    const [displayVideos, setDisplayVideos] = useState<Array<Video>>([])
+	const [count, setCount] = useState<number>(NUMBER_OF_VIDEO_TO_LOAD)
+    const [continuation, setContinuation] = useState<SearchContinuation | YTPlaylistContinuation | undefined | null>()
 	const [loading, setLoading] = useState<boolean>(false)
+    useEffect(() => {
+        setDisplayVideos(videos.slice(0, count))
+    }, [videos, count])
 	const setVideosWithLoading = useCallback(async (loadVideos: VideoLoader) => {
 		if (!loading) {
 			setLoading(true)
@@ -17,6 +25,7 @@ export function useVideos() {
 				setVideos(videos)
 				setContinuation(continuation)
 				setChannel(channel)
+                setCount(NUMBER_OF_VIDEO_TO_LOAD)
 			} catch (err) {
 				console.log(err)
 			}
@@ -38,15 +47,24 @@ export function useVideos() {
 		}
 	}, [])
 	const loadMoreVideos = useCallback(async () => {
-		if (!continuation) return
+        if (videos.length - count >= NUMBER_OF_VIDEO_TO_LOAD) {
+            await sleep(500)
+            return setCount(count + NUMBER_OF_VIDEO_TO_LOAD)
+        }
+		if (!continuation) {
+            if (videos.length > count) return setCount(count + NUMBER_OF_VIDEO_TO_LOAD)
+            return
+        }
 		const loader = channel ? loadMoreYTPlaylistVideos : loadMoreSearchResults
 		const result = await loader(continuation)
 		if (result) {
-			setVideos(videos.concat(result.newVideos))
+			const newVideos = videos.concat(result.newVideos)
+            if (videos.length > count)  setCount(count + NUMBER_OF_VIDEO_TO_LOAD)
+            setVideos(newVideos)
 			setContinuation(result.newContinuation)
 		}
 		
-	}, [continuation, videos, channel, loadMoreSearchResults, loadMoreYTPlaylistVideos])
+	}, [continuation, videos, channel, count, loadMoreSearchResults, loadMoreYTPlaylistVideos])
 
-	return {videos, channel, loading, setVideosWithLoading, loadMoreVideos}
+	return {videos: displayVideos, channel, loading, setVideosWithLoading, loadMoreVideos}
 }
