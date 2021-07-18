@@ -1,0 +1,19 @@
+.channel-header-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 15px 5px;
+    background-color: rgb(58, 58, 58);
+}
+
+.channel-header-container .avatar{
+    height: 80px;
+    width: 80px;
+}
+
+.channel-header-container .name{
+    margin-left: 10px;
+    color: white;
+    font-size: 40px;
+    font-weight: lighter;
+}

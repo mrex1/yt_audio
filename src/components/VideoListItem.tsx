@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react'
-import {Video} from 'ytsr'
-import {SuggestVideo} from '../types'
+import React, { useCallback, useContext } from 'react'
+import { Video } from '../types'
 import { isSuggestVideo } from '../utils'
-import {IconButton} from '@material-ui/core'
+import { api } from '../services'
+import { IconButton } from '@material-ui/core'
+import { mainScreenVideoContext } from '../context'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import LaunchIcon from '@material-ui/icons/Launch'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
@@ -10,7 +11,7 @@ import clsx from 'clsx'
 import './VideoListItem.css'
 
 interface Props {
-    video: Video | SuggestVideo;
+    video: Video;
     playing?: boolean;
     onAddClick?: (vid: string) => void;
     onPlayClick?: (vid: string) => void;
@@ -20,6 +21,7 @@ interface Props {
 const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick }: Props) => {
     const {title, author} = video
     const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
+    const {setVideosWithLoading} = useContext(mainScreenVideoContext)
 
     const onAddClickHandler = useCallback(() => {
         if (onAddClick) {
@@ -39,6 +41,20 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
         }
     }, [video, onPlayClick])
 
+    const getChannelLoader = useCallback((channelID: string) => async () => {
+        const result = await api.getYTPlaylist(channelID)
+        const videos = result ? result.items : []
+        const continuation = result?.continuation
+        const channel = result?.author
+        return {videos, continuation, channel}
+    }, [])
+
+    const setChannel = useCallback(() => {
+        if (video.author) {
+            setVideosWithLoading(getChannelLoader(video.author.channelID))
+        }
+    }, [setVideosWithLoading, getChannelLoader, video])
+
     return (
         <div className={clsx('video-list-item-container', {playing})}>
             {thumbnail && <img
@@ -51,7 +67,7 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
                 <div className='video-list-item-title single-line'>
                     {title}
                 </div>
-                <div className='video-list-item-subtitle single-line'>
+                <div className='video-list-item-subtitle single-line' onClick={setChannel}>
                     {author?.name}
                 </div>
                 <div className='video-list-item-row tools'>

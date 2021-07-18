@@ -1,6 +1,7 @@
 import {URL} from '../constants'
-import { VideoCache, SuggestVideo, SuggestionsCache } from '../types'
-import { Result as SearchResult, Video, Continuation, ContinueResult } from 'ytsr'
+import { VideoCache, SuggestVideo, SuggestionsCache, Video } from '../types'
+import { Result as SearchResult, Continuation, ContinueResult } from 'ytsr'
+import { Result as PlaylistResult, Continuation as PlaylistContinuation, ContinueResult as PlaylistContinueResult} from 'ytpl'
 
 export class API {
     private url: string
@@ -14,7 +15,7 @@ export class API {
     public getYoutubeLink(videoId: string): string {
         return `https://youtu.be/${videoId}`
     }
-    public getInfo(videoId: string): Video | SuggestVideo {
+    public getInfo(videoId: string): Video {
         return this.cache[videoId]
     }
     public getAudioURL(videoId: string): string {
@@ -75,6 +76,38 @@ export class API {
                 }
             })
             return result
+        } catch (err) {
+            return null
+        }
+    }
+    public async getYTPlaylist(id: string): Promise<PlaylistResult | null> {
+        try {
+            const res = await fetch(`${URL}/playlist?pid=${id}`)
+            const playlist: PlaylistResult = await res.json()
+            playlist.items.forEach(item => {
+                if (item.id in this.cache) return
+                this.cache[item.id] = item
+            })
+            return playlist
+        } catch (err) {
+            return null
+        }
+    }
+    public async getYTplaylistByContinuation(continuation: PlaylistContinuation): Promise<PlaylistContinueResult | null> {
+        try {
+            const res = await fetch(`${URL}/playlist`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(continuation)
+            })
+            const playlist: PlaylistContinueResult = await res.json()
+            playlist.items.forEach(item => {
+                if (item.id in this.cache) return
+                this.cache[item.id] = item
+            })
+            return playlist
         } catch (err) {
             return null
         }

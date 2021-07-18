@@ -1,5 +1,4 @@
-import { SuggestVideo } from '../types'
-import { Video } from 'ytsr'
+import { Video } from '../types'
 import {API, api} from './API'
 
 export class Playlist {
@@ -18,7 +17,7 @@ export class Playlist {
             this.videoIds.push(videoId)
         }
     }
-    get playlistVideos(): Array<Video | SuggestVideo> {
+    get playlistVideos(): Array<Video> {
         return this.videoIds.map(id => this.api.getInfo(id))
     }
     setCurByVid(vid: string): number | void {

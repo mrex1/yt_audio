@@ -6,15 +6,14 @@ import Up from '@material-ui/icons/ExpandLess'
 import Down from '@material-ui/icons/ExpandMore'
 import Player from './Player'
 import VideoList from './VideoList'
-import {Video} from 'ytsr'
 import VideoListItem from "./VideoListItem"
-import {SuggestVideo} from '../types'
+import {Video, SuggestVideo} from '../types'
 import {api} from '../services'
 import { openLink } from "../utils"
-import {videoContext, playlistActionContext} from '../context'
+import {playlistActionContext} from '../context'
 
 interface Props {
-    playlistVideos: Array<Video | SuggestVideo>;
+    playlistVideos: Array<Video>;
     currentIndex: number;
 }
 
@@ -56,7 +55,6 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
     }, [currentIndex, playlistVideos])
 
     return (
-        <videoContext.Provider value={{videos: suggestions}}>
         <div className={clsx('playlist', {open: on})}>
             <div className='top-section'>
                 <div className='player-container'>
@@ -81,11 +79,11 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
             {loading ?
-                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> : <VideoList className={clsx('list')}/>
+                <div style={{paddingTop: 30, paddingBottom: 30}}><LinearProgress/></div> :
+                <VideoList videos={suggestions} className={clsx('list')}/>
             }
             </div>
         </div>
-        </videoContext.Provider>
     )
 }
 
