@@ -80,7 +80,7 @@ export class API {
             return null
         }
     }
-    public async getPlaylistOrChannel(id: string): Promise<PlaylistResult | null> {
+    public async getYTPlaylist(id: string): Promise<PlaylistResult | null> {
         try {
             const res = await fetch(`${URL}/playlist?pid=${id}`)
             const playlist: PlaylistResult = await res.json()
@@ -89,7 +89,7 @@ export class API {
             return null
         }
     }
-    public async playlistContinue(continuation: PlaylistContinuation): Promise<PlaylistContinueResult | null> {
+    public async getYTplaylistByContinuation(continuation: PlaylistContinuation): Promise<PlaylistContinueResult | null> {
         try {
             const res = await fetch(`${URL}/playlist`, {
                 method: 'post',
