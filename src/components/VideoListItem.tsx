@@ -1,11 +1,12 @@
 import React, { useCallback, useContext } from 'react'
 import { Video } from '../types'
-import { isSuggestVideo } from '../utils'
+import { isSuggestVideo, isSearchVideo, formatViews } from '../utils'
 import { api } from '../services'
 import { IconButton } from '@material-ui/core'
 import { mainScreenVideoContext } from '../context'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import LaunchIcon from '@material-ui/icons/Launch'
+import DownloadIcon from '@material-ui/icons/GetApp'
+import Thumbnail from './Thumbnail'
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
 import clsx from 'clsx'
 import './VideoListItem.css'
@@ -15,12 +16,13 @@ interface Props {
     playing?: boolean;
     onAddClick?: (vid: string) => void;
     onPlayClick?: (vid: string) => void;
-    onLaunchClick?: (vid: string) => void;
+    onDownloadClick?: (vid: string) => void;
 }
 
-const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick }: Props) => {
+const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onDownloadClick }: Props) => {
     const {title, author} = video
     const thumbnail = isSuggestVideo(video) ? video.thumbnail.url : video.bestThumbnail.url
+    const views = isSearchVideo(video) ? video.views : null
     const {setVideosWithLoading} = useContext(mainScreenVideoContext)
 
     const onAddClickHandler = useCallback(() => {
@@ -29,11 +31,11 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
         }
     }, [video, onAddClick])
 
-    const onLaunchClickHandler = useCallback(() => {
-        if (onLaunchClick) {
-            onLaunchClick(video.id)
+    const onDownloadClickHandler = useCallback(() => {
+        if (onDownloadClick) {
+            onDownloadClick(video.id)
         }
-    }, [video, onLaunchClick])
+    }, [video, onDownloadClick])
 
     const onPlayClickHandler = useCallback(() => {
         if (onPlayClick) {
@@ -57,18 +59,16 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
 
     return (
         <div className={clsx('video-list-item-container', {playing})}>
-            {thumbnail && <img
-                src={thumbnail}
-                className='video-list-item-thumbnail'
-                alt='thumbnail'
-                loading='lazy'
-            />}
+            {thumbnail && <Thumbnail thumbnailUrl={thumbnail} duration={video.duration}/>}
             <div className='video-list-item-content'>
                 <div className='video-list-item-title single-line'>
                     {title}
                 </div>
                 <div className='video-list-item-subtitle single-line' onClick={setChannel}>
                     {author?.name}
+                </div>
+                <div className='video-list-item-subtitle single-line' onClick={setChannel}>
+                    {formatViews(views)}
                 </div>
                 <div className='video-list-item-row tools'>
                     {!playing && onPlayClick && <IconButton onClick={onPlayClickHandler} color='secondary'>
@@ -77,8 +77,8 @@ const VideoListItem = ({ video, playing, onAddClick, onPlayClick, onLaunchClick 
                     {onAddClick && <IconButton onClick={onAddClickHandler} color='secondary'>
                         <AddCircleOutlineIcon/>
                     </IconButton>}
-                    {onLaunchClick && <IconButton onClick={onLaunchClickHandler} color='secondary'>
-                        <LaunchIcon/>
+                    {onDownloadClick && <IconButton onClick={onDownloadClickHandler} color='secondary'>
+                        <DownloadIcon/>
                     </IconButton>}
                 </div>
             </div>

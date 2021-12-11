@@ -1,0 +1,19 @@
+.thumbnail-container {
+    position: relative;
+}
+
+.thumbnail-img {
+    width: 180px;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+.thumbnail-txt {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 10px;
+    color: white;
+    background-color: #474747;
+    padding: 3px;
+}

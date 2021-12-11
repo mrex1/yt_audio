@@ -1,4 +1,5 @@
 import {SuggestVideo} from '../types'
+import {Video as SearchVideo} from 'ytsr'
 
 export const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
 
@@ -23,6 +24,31 @@ export const durationToSeconds = (duration: string | null): number => {
 
 export const isSuggestVideo = (obj: any): obj is SuggestVideo => {
     return obj.thumbnail
+}
+
+export const isSearchVideo = (obj: any): obj is SearchVideo => {
+    return obj.views
+}
+
+const roundViews = (views:number , unit: number): string => {
+    return (views/unit).toFixed(1)
+}
+
+export const formatViews = (views: number | null): string => {
+    if (views === null) return ""
+    const billion = 100000000
+    const million = 1000000
+    const thousand = 1000 
+    if (views > billion) {
+        return `${roundViews(views, billion)}B Views`
+    }
+    if (views > million) {
+        return `${roundViews(views, million)}M Views`
+    }
+    if (views > thousand) {
+        return `${roundViews(views, thousand)}K Views`
+    }
+    return `${views} Views`
 }
 
 export const openLink = (link: string) => {

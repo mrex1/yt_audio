@@ -2,7 +2,6 @@ import React, { useCallback, useState, useContext } from 'react'
 import VideoListItem from './VideoListItem'
 import { LinearProgress } from '@material-ui/core'
 import { api } from '../services'
-import { openLink } from '../utils'
 import { playlistActionContext } from '../context'
 import { Video } from '../types'
 
@@ -29,9 +28,9 @@ const VideoList = ({className, spaceBottom, loadVideos, videos, children}: Props
         addToPlaylist(videoId)
     }, [addToPlaylist])
 
-    const onLaunchClick = useCallback((videoId: string) => {
-        const youtubeLink = api.getYoutubeLink(videoId)
-        openLink(youtubeLink)
+    const onDownloadClick = useCallback((videoId: string) => {
+        const a = api.getAudioDownloadLink(videoId)
+        a.click()
     }, [])
 
     const onPlayClick = useCallback((videoId: string) => {
@@ -49,7 +48,7 @@ const VideoList = ({className, spaceBottom, loadVideos, videos, children}: Props
                 key={v.id}
                 onAddClick={onAddClick}
                 onPlayClick={onPlayClick}
-                onLaunchClick={onLaunchClick}/>)}
+                onDownloadClick={onDownloadClick}/>)}
         {loading && <LinearProgress/>}
         {spaceBottom && <div style={{height: 100}}/>}
     </div>

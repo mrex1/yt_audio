@@ -9,7 +9,6 @@ import VideoList from './VideoList'
 import VideoListItem from "./VideoListItem"
 import {Video, SuggestVideo} from '../types'
 import {api} from '../services'
-import { openLink } from "../utils"
 import {playlistActionContext} from '../context'
 
 interface Props {
@@ -39,9 +38,9 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
         setLoading(false)
     }, [])
 
-    const onLaunchClick = useCallback((videoId: string) => {
-        const youtubeLink = api.getYoutubeLink(videoId)
-        openLink(youtubeLink)
+    const onDownloadClick = useCallback((videoId: string) => {
+        const a = api.getAudioDownloadLink(videoId)
+        a.click()
     }, [])
 
     useEffect(() => {
@@ -74,7 +73,7 @@ const PlaylistRenderer = ({playlistVideos, currentIndex}: Props) => {
                             key={`playlist${id}`}
                             video={info}
                             onPlayClick={() => playVideo(id)}
-                            onLaunchClick={onLaunchClick}
+                            onDownloadClick={onDownloadClick}
                             playing={id === currentIndex}/>)}
             </div>
             <Typography className={clsx('divider')} variant='h5' component='h5'>Suggested</Typography>
