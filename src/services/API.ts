@@ -34,7 +34,6 @@ export class API {
         try {
             const res = await fetch(`${URL}/suggest?vid=${videoId}`)
             const result: SuggestVideo[] = await res.json()
-            console.log({suggest: result})
             result.forEach(v => {
                 if (!(v.id in this.cache)) {
                     this.cache[v.id] = v
