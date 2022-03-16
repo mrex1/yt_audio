@@ -36,7 +36,7 @@ const roundViews = (views:number , unit: number): string => {
 
 export const formatViews = (views: number | null): string => {
     if (views === null) return ""
-    const billion = 100000000
+    const billion = 1000000000
     const million = 1000000
     const thousand = 1000 
     if (views > billion) {

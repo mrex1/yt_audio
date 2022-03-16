@@ -1,6 +1,6 @@
 import {createMuiTheme} from '@material-ui/core'
 
-export const URL = 'https://sleepy-tundra-94597.herokuapp.com'
+export const URL = 'http://localhost:3001'
 
 export const theme = createMuiTheme({
     palette: {
